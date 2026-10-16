@@ -129,6 +129,22 @@
       padding:11px 15px;border-radius:14px;cursor:pointer
     }
     #dashboard .premium-btn.primary{background:linear-gradient(180deg,#1aa786,#0e755f)}
+    #dashboard .premium-btn.itronic-app-link{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      background:var(--brand);border-color:var(--brand);color:#052019;
+      font-weight:800;text-decoration:none;white-space:nowrap;
+      transition:transform .18s ease,box-shadow .18s ease;
+    }
+    #dashboard .premium-btn.itronic-app-link:hover{
+      transform:translateY(-2px);box-shadow:0 8px 20px rgba(53,211,173,.22);
+    }
+    #dashboard .premium-btn.itronic-app-link:focus-visible{
+      outline:3px solid #fff;outline-offset:3px;
+    }
+    @media(prefers-reduced-motion:reduce){
+      #dashboard .premium-btn.itronic-app-link{transition:none}
+      #dashboard .premium-btn.itronic-app-link:hover{transform:none}
+    }
     #dashboard .premium-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
     #dashboard .premium-kpi{
       position:relative;overflow:hidden;
@@ -482,6 +498,7 @@
       <p>Os números que determinam se a loja está ficando mais forte.</p>
     </div>
     <div class="premium-actions">
+      <a class="premium-btn itronic-app-link" href="https://itronicrioverde-pixel.github.io/iTronic-Rio-Verde/" target="_blank" rel="noopener noreferrer" aria-label="Abrir aplicativo iTronic em uma nova aba">Abrir iTronic <span aria-hidden="true">↗</span></a>
       <button class="premium-btn" id="dashExportBtn">Exportar dados</button>
       <label class="premium-btn">Importar<input id="dashImportFile" type="file" accept=".json" hidden></label>
       <button class="premium-btn primary" id="dashResetBtn">Limpar teste</button>
