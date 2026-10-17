@@ -129,22 +129,6 @@
       padding:11px 15px;border-radius:14px;cursor:pointer
     }
     #dashboard .premium-btn.primary{background:linear-gradient(180deg,#1aa786,#0e755f)}
-    #dashboard .premium-btn.itronic-app-link{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      background:var(--brand);border-color:var(--brand);color:#052019;
-      font-weight:800;text-decoration:none;white-space:nowrap;
-      transition:transform .18s ease,box-shadow .18s ease;
-    }
-    #dashboard .premium-btn.itronic-app-link:hover{
-      transform:translateY(-2px);box-shadow:0 8px 20px rgba(53,211,173,.22);
-    }
-    #dashboard .premium-btn.itronic-app-link:focus-visible{
-      outline:3px solid #fff;outline-offset:3px;
-    }
-    @media(prefers-reduced-motion:reduce){
-      #dashboard .premium-btn.itronic-app-link{transition:none}
-      #dashboard .premium-btn.itronic-app-link:hover{transform:none}
-    }
     #dashboard .premium-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
     #dashboard .premium-kpi{
       position:relative;overflow:hidden;
@@ -451,6 +435,301 @@
       }
     }
 
+
+    /* =========================================================
+       V4.5 — NOVA IDENTIDADE CLARA / VERDE-LIMÃO
+       Baseada no padrão visual enviado pelo usuário.
+       Apenas frontend: funções e armazenamento preservados.
+       ========================================================= */
+    :root{
+      --bg:#f3f8ee;
+      --panel:#ffffff;
+      --panel2:#f7faF3;
+      --line:#dbe7d2;
+      --text:#18231d;
+      --muted:#6d7b71;
+      --brand:#a8e600;
+      --brand2:#85c900;
+      --danger:#e44f5a;
+      --warn:#e6ad2e;
+      --ok:#238c57;
+      --shadow:0 16px 44px rgba(42,72,48,.10);
+      --radius:22px;
+    }
+
+    html{background:#f3f8ee}
+    body{
+      background:
+        radial-gradient(circle at 92% 30%,rgba(176,235,24,.32),transparent 28%),
+        radial-gradient(circle at 12% 12%,rgba(192,235,170,.26),transparent 30%),
+        linear-gradient(135deg,#f7fbf3 0%,#eef7e7 52%,#ddf39a 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    /* Sidebar */
+    .side{
+      background:rgba(248,251,244,.92);
+      border-right:1px solid rgba(117,145,105,.18);
+      box-shadow:10px 0 35px rgba(52,82,55,.05);
+      backdrop-filter:blur(18px);
+    }
+    .brand h1{color:#1d2a21}
+    .brand small{color:#78857c}
+    .logo{
+      background:linear-gradient(145deg,#b9ef2d,#86c900);
+      color:#214000;
+      box-shadow:0 8px 22px rgba(143,206,12,.28);
+    }
+    .navbtn{color:#66746a}
+    .navbtn:hover{
+      background:#edf5e8;
+      color:#1d2a21;
+    }
+    .navbtn.active{
+      background:linear-gradient(135deg,#eef7e2,#dff3ac);
+      color:#20351e;
+      box-shadow:inset 0 0 0 1px rgba(123,169,46,.14);
+      font-weight:700;
+    }
+    .sidefoot{
+      background:rgba(255,255,255,.82);
+      border-color:#dce8d4;
+      box-shadow:0 10px 30px rgba(45,75,46,.07);
+    }
+
+    /* Cabeçalhos */
+    .top h2,#dashboard .premium-title h2{color:#17221c}
+    .top p,#dashboard .premium-title p{color:#738078}
+    .muted,.meta{color:#7b887f!important}
+
+    /* Botões */
+    .btn,.premium-btn{
+      background:#fff!important;
+      color:#1c281f!important;
+      border:1px solid #d9e5d3!important;
+      box-shadow:0 6px 20px rgba(44,69,47,.06);
+    }
+    .btn:hover,.premium-btn:hover{
+      transform:translateY(-1px);
+      border-color:#bfd49f!important;
+      background:#fbfdf8!important;
+    }
+    .btn.primary,#dashboard .premium-btn.primary{
+      background:linear-gradient(180deg,#b4ee00,#96d700)!important;
+      border-color:#98d500!important;
+      color:#213300!important;
+      box-shadow:0 10px 24px rgba(149,208,0,.22)!important;
+    }
+    .btn.danger{color:#c83d48!important}
+
+    /* Cards e superfícies */
+    .card,
+    .resultBox,
+    .mini,
+    .health-stat,
+    .health-strip .box{
+      background:rgba(255,255,255,.90)!important;
+      color:#1a261e!important;
+      border-color:#d9e6d2!important;
+      box-shadow:0 12px 32px rgba(52,82,55,.08)!important;
+    }
+    .card{
+      backdrop-filter:blur(10px);
+    }
+    .kpi span,.kpi small,.mini span,.health-stat span{color:#748078!important}
+
+    /* Formulários */
+    .field label{color:#647269!important}
+    .field input,.field select, input, select{
+      background:#fff!important;
+      color:#1e2922!important;
+      border-color:#d9e4d3!important;
+      box-shadow:none!important;
+    }
+    .field input:focus,.field select:focus,input:focus,select:focus{
+      outline:none!important;
+      border-color:#9ed300!important;
+      box-shadow:0 0 0 3px rgba(168,230,0,.18)!important;
+    }
+
+    /* Tabelas */
+    table{background:transparent}
+    th{
+      color:#65736a!important;
+      background:#f7faf4;
+    }
+    th,td{border-bottom-color:#e4ece0!important}
+    td{color:#1b271f}
+    tbody tr:hover{background:#f8fbf5}
+
+    /* Mensagens / hints */
+    .hint{
+      background:#f2f9e9!important;
+      color:#355332!important;
+      border-color:#d3e9b9!important;
+    }
+    .pill{
+      background:#e8f7df!important;
+      color:#267044!important;
+    }
+    .pill.warn,.health-pill.warn{
+      background:#fff5d9!important;
+      color:#8c6810!important;
+    }
+    .pill.bad,.health-pill.risk{
+      background:#ffe8e9!important;
+      color:#b53943!important;
+    }
+    .health-pill.good{
+      background:#e2f6e9!important;
+      color:#23734a!important;
+    }
+
+    /* Barras */
+    .progress,.health-bar{
+      background:#eef3ea!important;
+      border-color:#d8e4d2!important;
+    }
+    .progress>i,
+    #dashboard .premium-progress i{
+      background:linear-gradient(90deg,#91d000,#c6f344)!important;
+    }
+    .health-bar.good i{background:#39a968!important}
+    .health-bar.warn i{background:#e4b541!important}
+    .health-bar.risk i{background:#e45862!important}
+
+    /* Modais */
+    .modal{background:rgba(26,42,31,.35)!important;backdrop-filter:blur(8px)}
+    .modal-card{
+      background:#fbfdf9!important;
+      color:#1b271f!important;
+      border-color:#d9e5d3!important;
+      box-shadow:0 32px 80px rgba(35,58,38,.22)!important;
+    }
+
+    /* Dashboard premium claro */
+    #dashboard{
+      --dash-card:#ffffff;
+      --dash-card-2:#f5f9f1;
+      --dash-border:#d8e5d1;
+      --dash-soft:#f5f8f1;
+      --dash-accent:#a8e600;
+      --dash-muted:#738078;
+    }
+
+    #dashboard .premium-kpi{
+      background:rgba(255,255,255,.92)!important;
+      border-color:#d9e5d3!important;
+      box-shadow:0 14px 34px rgba(49,77,51,.08);
+      color:#17231c;
+    }
+    #dashboard .premium-kpi::after{
+      background:radial-gradient(circle,rgba(167,229,0,.15),transparent 68%)!important;
+    }
+    #dashboard .premium-icon{
+      background:linear-gradient(180deg,#eef8d9,#dff1b4)!important;
+      color:#4d7612!important;
+      border:1px solid rgba(140,188,53,.16);
+    }
+    #dashboard .premium-kpi label{color:#68766d!important}
+    #dashboard .premium-kpi strong{color:#17231c}
+    #dashboard .premium-kpi small{color:#7b887f!important}
+    #dashboard .premium-kpi.risk{
+      background:linear-gradient(145deg,#fff,#fff5f4)!important;
+      border-color:#f0d3d3!important;
+    }
+    #dashboard .premium-kpi.risk .premium-icon{
+      background:#ffe7e7!important;
+      color:#c9434d!important;
+      border-color:#f3caca!important;
+    }
+    #dashboard .premium-kpi.risk strong{color:#d94d57!important}
+
+    #dashboard .premium-panel{
+      background:rgba(255,255,255,.90)!important;
+      border-color:#d8e5d1!important;
+      box-shadow:0 16px 42px rgba(52,82,55,.08);
+    }
+    #dashboard .premium-panel-title h3{color:#18241d}
+    #dashboard .premium-panel-title p{color:#77847b!important}
+
+    #dashboard .premium-metric,
+    #dashboard .premium-mini{
+      background:#f8fbf5!important;
+      border-color:#dfe9da!important;
+      color:#1b271f!important;
+    }
+    #dashboard .premium-metric span,
+    #dashboard .premium-mini span{color:#748078!important}
+    #dashboard .premium-metric b,
+    #dashboard .premium-mini b{color:#17231c}
+
+    #dashboard .premium-status{
+      background:linear-gradient(90deg,#f8fbf4,#f2f8e8)!important;
+      border-color:#dbe7d4!important;
+    }
+    #dashboard .premium-status>div+div{border-color:#dfe9da!important}
+
+    #dashboard .premium-info{
+      background:linear-gradient(135deg,#eff8e6,#f8fbdc)!important;
+      border-color:#cfe5af!important;
+      color:#36542f!important;
+    }
+    #dashboard .premium-fund-row{
+      border-bottom-color:#e3eadf!important;
+      color:#1c281f;
+    }
+    #dashboard .premium-progress{
+      background:#eef3ea!important;
+      border-color:#d7e3d1!important;
+    }
+
+    /* Seção em verde escuro para dar identidade sem pesar */
+    #dashboard .premium-bottom .premium-panel:last-child{
+      background:linear-gradient(135deg,#174f3b 0%,#2d7049 58%,#6e9c46 100%)!important;
+      border-color:transparent!important;
+      color:#fff!important;
+      box-shadow:0 20px 46px rgba(35,83,52,.20)!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child h3,
+    #dashboard .premium-bottom .premium-panel:last-child b{
+      color:#fff!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child p,
+    #dashboard .premium-bottom .premium-panel:last-child .meta{
+      color:rgba(255,255,255,.72)!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child .premium-icon{
+      background:rgba(255,255,255,.12)!important;
+      color:#dfff90!important;
+      border-color:rgba(255,255,255,.13)!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child .premium-fund-row{
+      border-bottom-color:rgba(255,255,255,.13)!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child .premium-progress{
+      background:rgba(255,255,255,.13)!important;
+      border-color:rgba(255,255,255,.20)!important;
+    }
+
+    /* Saúde da precificação */
+    .health-row.good::before{background:#39a968!important}
+    .health-row.warn::before{background:#e5b846!important}
+    .health-row.risk::before{background:#e25b64!important}
+
+    /* Scrollbar */
+    *{scrollbar-color:#bddb86 #eef4e8}
+    ::selection{background:#c9f06e;color:#1a281c}
+
+    /* Responsivo */
+    @media(max-width:1050px){
+      .side{
+        background:rgba(249,252,246,.96);
+        border-color:#dce7d6;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -498,7 +777,6 @@
       <p>Os números que determinam se a loja está ficando mais forte.</p>
     </div>
     <div class="premium-actions">
-      <a class="premium-btn itronic-app-link" href="https://itronicrioverde-pixel.github.io/iTronic-Rio-Verde/?v=20261016-alavancagem" target="_blank" rel="noopener noreferrer" aria-label="Abrir aplicativo iTronic em uma nova aba">Abrir iTronic <span aria-hidden="true">↗</span></a>
       <button class="premium-btn" id="dashExportBtn">Exportar dados</button>
       <label class="premium-btn">Importar<input id="dashImportFile" type="file" accept=".json" hidden></label>
       <button class="premium-btn primary" id="dashResetBtn">Limpar teste</button>
