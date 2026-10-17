@@ -1,0 +1,2237 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>iTronic Gestão | Financeiro, Compras e Precificação</title>
+  <meta name="theme-color" content="#A8E600">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="iTronic Gestão">
+  <link rel="manifest" href="./manifest.webmanifest?v=20261017">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=20261017">
+  <link rel="apple-touch-icon-precomposed" href="./apple-touch-icon.png?v=20261017">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png?v=20261017">
+  <link rel="shortcut icon" href="./favicon.png?v=20261017">
+
+  <style>
+    :root{
+      --bg:#071512;
+      --panel:#0d211c;
+      --panel2:#102a23;
+      --line:#20463b;
+      --text:#f5fbf8;
+      --muted:#9db9ae;
+      --brand:#35d3ad;
+      --brand2:#22b995;
+      --danger:#ff6f6f;
+      --warn:#ffc766;
+      --ok:#52dda8;
+      --shadow:0 20px 50px rgba(0,0,0,.22);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#06100e,#0a1a16 42%,#071512);color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select{font:inherit}
+    .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}
+    .side{position:sticky;top:0;height:100vh;padding:22px 18px;border-right:1px solid var(--line);background:rgba(6,16,14,.9);backdrop-filter:blur(18px)}
+    .brand{display:flex;align-items:center;gap:12px;padding:8px 10px 22px}
+    .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,var(--brand),#0f8f70);display:grid;place-items:center;color:#032019;font-weight:900}
+    .brand h1{font-size:18px;margin:0}.brand small{display:block;color:var(--muted);margin-top:2px}
+    nav{display:grid;gap:7px}.navbtn{border:0;background:transparent;color:var(--muted);text-align:left;padding:12px 14px;border-radius:14px;cursor:pointer}
+    .navbtn.active,.navbtn:hover{background:var(--panel2);color:var(--text)}
+    .sidefoot{position:absolute;bottom:18px;left:18px;right:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0b1d18}
+    .sidefoot b{display:block;margin-bottom:4px}.sidefoot span{color:var(--muted);font-size:12px}
+    main{padding:30px;max-width:1500px;width:100%;margin:0 auto}
+    .top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}
+    .top h2{margin:0;font-size:28px;letter-spacing:-.03em}.top p{margin:5px 0 0;color:var(--muted)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:11px 14px;border-radius:13px;cursor:pointer}
+    .btn.primary{background:var(--brand);border-color:transparent;color:#052019;font-weight:800}
+    .btn.danger{color:#ffdede}
+    .grid{display:grid;gap:16px}.cards{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .card{background:linear-gradient(180deg,rgba(17,43,36,.94),rgba(11,29,24,.96));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    .kpi span{display:block;color:var(--muted);font-size:13px}.kpi strong{display:block;font-size:28px;margin-top:9px;letter-spacing:-.04em}.kpi small{display:block;margin-top:9px;color:var(--muted)}
+    .kpi.ok strong{color:var(--ok)}.kpi.bad strong{color:var(--danger)}.kpi.warn strong{color:var(--warn)}
+    .section{display:none}.section.active{display:block}
+    .section-title{margin:28px 0 14px;display:flex;justify-content:space-between;align-items:center;gap:12px}.section-title h3{margin:0;font-size:18px}.section-title p{margin:3px 0 0;color:var(--muted);font-size:13px}
+    .two{grid-template-columns:1.25fr .75fr}.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .list{display:grid;gap:10px}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(74,116,101,.25)}.row:last-child{border-bottom:0}.row .meta{color:var(--muted);font-size:12px;margin-top:3px}
+    .pill{padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#12382e;color:#bff9e6}.pill.bad{background:#3c1f22;color:#ffc8c8}.pill.warn{background:#3b311c;color:#ffe1a4}
+    .progress{height:10px;background:#0a1714;border-radius:999px;overflow:hidden;border:1px solid var(--line)}.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),#78efcf);width:0}
+    table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:11px 10px;border-bottom:1px solid rgba(74,116,101,.25);text-align:left}th{color:var(--muted);font-weight:600}td:last-child,th:last-child{text-align:right}
+    .form{display:grid;gap:12px}.form.cols{grid-template-columns:repeat(2,minmax(0,1fr))}.field label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}.field input,.field select{width:100%;border:1px solid var(--line);background:#081b16;color:var(--text);border-radius:12px;padding:11px 12px;outline:none}.field input:focus,.field select:focus{border-color:var(--brand)}
+    .resultBox{padding:16px;border:1px solid var(--line);background:#081b16;border-radius:16px}.big{font-size:30px;font-weight:900;letter-spacing:-.04em}.muted{color:var(--muted)}
+    .hint{padding:12px 14px;border-radius:14px;background:#0d2b23;color:#c8f7e8;font-size:13px;line-height:1.45;border:1px solid #1b4f40}
+    .warning{background:#322717;border-color:#5c4720;color:#ffe4ad}
+    .dangerbox{background:#321d20;border-color:#5e2b31;color:#ffd0d4}
+    .mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mini{padding:12px;border:1px solid var(--line);border-radius:14px;background:#091a16}.mini span{display:block;color:var(--muted);font-size:11px}.mini b{display:block;margin-top:6px;font-size:18px}
+    .empty{padding:26px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+    .fab{display:none}
+    @media(max-width:1050px){.app{grid-template-columns:1fr}.side{position:fixed;z-index:50;left:0;right:0;bottom:0;top:auto;height:auto;padding:8px 10px;border:0;border-top:1px solid var(--line)}.brand,.sidefoot{display:none}nav{grid-template-columns:repeat(6,1fr)}.navbtn{padding:10px 6px;text-align:center;font-size:11px}.navbtn:nth-child(n+7){display:none}main{padding:20px 14px 95px}.cards{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}}
+    @media(max-width:650px){.top{align-items:flex-start}.actions{display:none}.cards{grid-template-columns:1fr 1fr}.kpi strong{font-size:22px}.form.cols{grid-template-columns:1fr}.mini-grid{grid-template-columns:1fr}.top h2{font-size:24px}.card{padding:15px;border-radius:18px}}
+  
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;z-index:999;padding:18px}
+    .modal.open{display:flex}
+    .modal-card{width:min(560px,100%);background:#0b1d18;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+    .modal-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}
+    .modal-head h3{margin:0}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+
+
+    .health-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+    .health-stat{padding:14px;border-radius:16px;border:1px solid var(--line);background:#091a16}
+    .health-stat span{display:block;font-size:11px;color:var(--muted)}
+    .health-stat b{display:block;font-size:24px;margin-top:5px}
+    .health-stat.good b{color:var(--ok)}
+    .health-stat.warn b{color:var(--warn)}
+    .health-stat.risk b{color:var(--danger)}
+    .health-row{position:relative;overflow:hidden}
+    .health-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;border-radius:5px}
+    .health-row.good::before{background:var(--ok)}
+    .health-row.warn::before{background:var(--warn)}
+    .health-row.risk::before{background:var(--danger)}
+    .health-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+    .health-pill.good{background:#12382e;color:#bff9e6}
+    .health-pill.warn{background:#3b311c;color:#ffe1a4}
+    .health-pill.risk{background:#3c1f22;color:#ffc8c8}
+    .health-bar{height:8px;border-radius:999px;background:#071512;border:1px solid var(--line);overflow:hidden;min-width:120px}
+    .health-bar i{display:block;height:100%;border-radius:999px}
+    .health-bar.good i{background:var(--ok)}
+    .health-bar.warn i{background:var(--warn)}
+    .health-bar.risk i{background:var(--danger)}
+    @media(max-width:650px){.health-summary{grid-template-columns:1fr}}
+
+
+    .dash-section-title{margin:20px 0 10px;display:flex;justify-content:space-between;align-items:end;gap:12px}
+    .dash-section-title h3{margin:0;font-size:16px}
+    .dash-section-title p{margin:3px 0 0;color:var(--muted);font-size:12px}
+    .metric-good{color:var(--ok)!important}
+    .metric-warn{color:var(--warn)!important}
+    .metric-risk{color:var(--danger)!important}
+    .health-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+    .health-strip .box{padding:12px;border:1px solid var(--line);border-radius:14px;background:#081b16}
+    .health-strip .box span{display:block;color:var(--muted);font-size:11px}
+    .health-strip .box b{display:block;font-size:21px;margin-top:4px}
+    .health-strip .good b{color:var(--ok)}
+    .health-strip .warn b{color:var(--warn)}
+    .health-strip .risk b{color:var(--danger)}
+    .dash-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.35}
+    @media(max-width:650px){.health-strip{grid-template-columns:1fr 1fr 1fr}}
+
+
+    /* ===== Dashboard premium V4.3 ===== */
+    #dashboard{
+      --dash-card:#0d211c;
+      --dash-card-2:#102a23;
+      --dash-border:#1c4f42;
+      --dash-soft:#0b1b17;
+      --dash-accent:#38d6ad;
+      --dash-muted:#9bb7ad;
+    }
+    #dashboard .premium-hero{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:18px
+    }
+    #dashboard .premium-title h2{margin:0;font-size:34px;letter-spacing:-.04em}
+    #dashboard .premium-title p{margin:6px 0 0;color:var(--dash-muted)}
+    #dashboard .premium-actions{display:flex;gap:10px;flex-wrap:wrap}
+    #dashboard .premium-btn{
+      border:1px solid var(--dash-border);background:#0a1a16;color:#fff;
+      padding:11px 15px;border-radius:14px;cursor:pointer
+    }
+    #dashboard .premium-btn.primary{background:linear-gradient(180deg,#1aa786,#0e755f)}
+    #dashboard .premium-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    #dashboard .premium-kpi{
+      position:relative;overflow:hidden;
+      background:linear-gradient(180deg,rgba(16,45,37,.98),rgba(10,27,23,.98));
+      border:1px solid var(--dash-border);border-radius:20px;padding:18px 18px 16px;
+      min-height:138px
+    }
+    #dashboard .premium-kpi::after{
+      content:"";position:absolute;right:-28px;bottom:-42px;width:110px;height:110px;
+      background:radial-gradient(circle,rgba(56,214,173,.14),transparent 68%);border-radius:50%
+    }
+    #dashboard .premium-kpi-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    #dashboard .premium-icon{
+      width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+      background:linear-gradient(180deg,#0f5d4d,#0b3a31);font-size:20px
+    }
+    #dashboard .premium-kpi label{display:block;color:#b5cec5;font-size:13px}
+    #dashboard .premium-kpi strong{display:block;font-size:28px;margin-top:8px;letter-spacing:-.04em}
+    #dashboard .premium-kpi small{display:block;color:var(--dash-muted);margin-top:7px}
+    #dashboard .premium-kpi.risk .premium-icon{background:linear-gradient(180deg,#4a2628,#2d1b1d)}
+    #dashboard .premium-kpi.risk strong{color:#ff747a}
+    #dashboard .premium-panel{
+      margin-top:16px;background:linear-gradient(180deg,rgba(13,33,28,.98),rgba(9,25,21,.98));
+      border:1px solid var(--dash-border);border-radius:22px;padding:20px
+    }
+    #dashboard .premium-panel-head{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px
+    }
+    #dashboard .premium-panel-title{display:flex;gap:12px;align-items:flex-start}
+    #dashboard .premium-panel-title .premium-icon{width:42px;height:42px}
+    #dashboard .premium-panel-title h3{margin:0;font-size:19px}
+    #dashboard .premium-panel-title p{margin:4px 0 0;color:var(--dash-muted);font-size:13px}
+    #dashboard .premium-metrics{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px
+    }
+    #dashboard .premium-metric{
+      border:1px solid rgba(42,96,80,.7);background:#0a1d18;border-radius:16px;padding:15px
+    }
+    #dashboard .premium-metric span{display:block;color:var(--dash-muted);font-size:12px}
+    #dashboard .premium-metric b{display:block;margin-top:6px;font-size:21px}
+    #dashboard .premium-status{
+      margin-top:12px;border:1px solid rgba(42,96,80,.6);background:#091a16;
+      border-radius:15px;padding:12px 14px;display:grid;grid-template-columns:repeat(3,1fr)
+    }
+    #dashboard .premium-status>div{
+      display:flex;align-items:center;justify-content:center;gap:8px;padding:5px 10px
+    }
+    #dashboard .premium-status>div+div{border-left:1px solid rgba(42,96,80,.35)}
+    #dashboard .dot{width:9px;height:9px;border-radius:50%}
+    #dashboard .dot.good{background:var(--ok)} #dashboard .dot.warn{background:var(--warn)} #dashboard .dot.risk{background:var(--danger)}
+    #dashboard .premium-bottom{display:grid;grid-template-columns:1.35fr .95fr;gap:16px;margin-top:16px}
+    #dashboard .premium-finance-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    #dashboard .premium-mini{
+      border:1px solid rgba(42,96,80,.6);background:#091a16;border-radius:14px;padding:14px
+    }
+    #dashboard .premium-mini span{display:block;color:var(--dash-muted);font-size:11px}
+    #dashboard .premium-mini b{display:block;font-size:19px;margin-top:5px}
+    #dashboard .premium-info{
+      margin-top:14px;border:1px solid rgba(42,96,80,.6);background:#0d2b23;
+      border-radius:14px;padding:12px 14px;color:#cff7e9;font-size:13px
+    }
+    #dashboard .premium-fund-body{margin-top:var(--sp-3)}
+    #dashboard .premium-fund-row{
+      display:flex;justify-content:space-between;gap:12px;padding:11px 0;
+      border-bottom:1px solid rgba(42,96,80,.28)
+    }
+    #dashboard .premium-fund-row:last-child{border-bottom:0}
+    #dashboard .premium-fund-row .meta{margin-top:2px}
+    #dashboard .premium-progress{height:9px;border-radius:999px;background:#071713;border:1px solid var(--dash-border);overflow:hidden;margin-top:14px}
+    #dashboard .premium-progress i{display:block;height:100%;background:linear-gradient(90deg,#2cd1aa,#83efd4);width:0}
+    @media(max-width:1100px){
+      #dashboard .premium-kpis,#dashboard .premium-metrics{grid-template-columns:repeat(2,1fr)}
+      #dashboard .premium-bottom{grid-template-columns:1fr}
+    }
+    @media(max-width:700px){
+      #dashboard .premium-hero{display:block}
+      #dashboard .premium-actions{margin-top:14px}
+      #dashboard .premium-kpis,#dashboard .premium-metrics,#dashboard .premium-finance-row{grid-template-columns:1fr}
+      #dashboard .premium-status{grid-template-columns:1fr}
+      #dashboard .premium-status>div+div{border-left:0;border-top:1px solid rgba(42,96,80,.35)}
+    }
+
+
+    /* ===== V4.4 — revisão completa de espaçamentos ===== */
+    :root{
+      --sp-1:4px;
+      --sp-2:8px;
+      --sp-3:12px;
+      --sp-4:16px;
+      --sp-5:20px;
+      --sp-6:24px;
+      --sp-7:32px;
+      --sp-8:40px;
+      --sp-9:48px;
+    }
+
+    /* Estrutura geral */
+    main{
+      max-width:1480px;
+      padding:var(--sp-7) var(--sp-7) var(--sp-9);
+    }
+    .section.active{display:block}
+    .grid{gap:var(--sp-4)}
+    .two,.three,.cards{gap:var(--sp-4)}
+
+    /* Cabeçalho das páginas internas */
+    .top{
+      margin-bottom:var(--sp-6);
+      gap:var(--sp-5);
+      align-items:flex-start;
+    }
+    .top h2{line-height:1.08}
+    .top p{margin-top:var(--sp-2);line-height:1.45}
+    .actions{gap:var(--sp-2)}
+
+    /* Cards gerais */
+    .card{
+      padding:var(--sp-5);
+      border-radius:20px;
+    }
+    .section-title{
+      margin:var(--sp-7) 0 var(--sp-4);
+      gap:var(--sp-4);
+    }
+    .card>.section-title:first-child,
+    .card .section-title[style*="margin-top:0"]{
+      margin-top:0!important;
+    }
+    .section-title h3{line-height:1.2}
+    .section-title p{margin-top:var(--sp-1);line-height:1.45}
+
+    /* Formulários */
+    .form{gap:var(--sp-3)}
+    .form.cols{gap:var(--sp-3) var(--sp-4)}
+    .field label{margin-bottom:var(--sp-2);line-height:1.25}
+    .field input,.field select{
+      min-height:44px;
+      padding:10px 12px;
+    }
+
+    /* Botões */
+    .btn{
+      min-height:42px;
+      padding:10px 14px;
+    }
+
+    /* Tabelas */
+    table{border-spacing:0}
+    th,td{
+      padding:13px 12px;
+      vertical-align:middle;
+      line-height:1.35;
+    }
+    th:first-child,td:first-child{padding-left:10px}
+    th:last-child,td:last-child{padding-right:10px}
+
+    /* Linhas, caixas e mensagens */
+    .row{padding:13px 0}
+    .mini-grid{gap:var(--sp-3)}
+    .mini{padding:13px}
+    .hint{
+      margin-top:var(--sp-4);
+      padding:12px 14px;
+      line-height:1.5;
+    }
+    .empty{padding:var(--sp-7) var(--sp-4)}
+
+    /* Modal */
+    .modal{padding:var(--sp-5)}
+    .modal-card{padding:var(--sp-5)}
+    .modal-head{margin-bottom:var(--sp-3)}
+    .modal-actions{gap:var(--sp-2);margin-top:var(--sp-5)}
+
+    /* ===== Dashboard premium ===== */
+    #dashboard .premium-hero{
+      margin-bottom:var(--sp-5);
+      gap:var(--sp-6);
+    }
+    #dashboard .premium-title h2{
+      font-size:32px;
+      line-height:1.06;
+    }
+    #dashboard .premium-title p{
+      margin-top:var(--sp-2);
+      line-height:1.45;
+    }
+    #dashboard .premium-actions{gap:var(--sp-2)}
+    #dashboard .premium-btn{
+      min-height:42px;
+      padding:10px 14px;
+    }
+
+    #dashboard .premium-kpis{gap:var(--sp-4)}
+    #dashboard .premium-kpi{
+      min-height:132px;
+      padding:var(--sp-4);
+    }
+    #dashboard .premium-kpi-top{margin-bottom:var(--sp-2)}
+    #dashboard .premium-kpi strong{
+      margin-top:var(--sp-2);
+      line-height:1.06;
+    }
+    #dashboard .premium-kpi small{
+      margin-top:var(--sp-2);
+      line-height:1.35;
+    }
+
+    #dashboard .premium-panel{
+      margin-top:var(--sp-4);
+      padding:var(--sp-5);
+    }
+    #dashboard .premium-panel-head{
+      margin-bottom:var(--sp-4);
+      gap:var(--sp-4);
+    }
+    #dashboard .premium-panel-title{
+      gap:var(--sp-3);
+    }
+    #dashboard .premium-panel-title p{
+      margin-top:var(--sp-1);
+      line-height:1.45;
+    }
+
+    #dashboard .premium-metrics{
+      gap:var(--sp-3);
+    }
+    #dashboard .premium-metric{
+      min-height:106px;
+      padding:var(--sp-4);
+    }
+    #dashboard .premium-metric b{
+      margin-top:var(--sp-2);
+      line-height:1.1;
+    }
+    #dashboard .premium-metric .meta{margin-top:var(--sp-2)}
+
+    #dashboard .premium-status{
+      margin-top:var(--sp-3);
+      padding:10px 12px;
+    }
+    #dashboard .premium-status>div{
+      min-height:46px;
+      gap:var(--sp-2);
+      padding:6px 10px;
+      flex-wrap:wrap;
+    }
+
+    #dashboard .premium-bottom{
+      gap:var(--sp-4);
+      margin-top:var(--sp-4);
+    }
+    #dashboard .premium-finance-row{
+      gap:var(--sp-3);
+      margin-top:var(--sp-4)!important;
+    }
+    #dashboard .premium-mini{
+      min-height:92px;
+      padding:var(--sp-3);
+    }
+    #dashboard .premium-mini b{
+      margin-top:var(--sp-2);
+      line-height:1.1;
+    }
+    #dashboard .premium-info{
+      margin-top:var(--sp-4);
+      padding:12px 14px;
+    }
+    #dashboard .premium-fund-row{
+      min-height:58px;
+      padding:11px 0;
+      align-items:center;
+    }
+    #dashboard .premium-progress{
+      margin-top:var(--sp-4);
+    }
+
+    /* Sidebar */
+    .side{padding:var(--sp-5) var(--sp-4)}
+    .brand{padding:6px 8px var(--sp-5)}
+    nav{gap:6px}
+    .navbtn{padding:11px 12px}
+
+    /* Mobile / tablet */
+    @media(max-width:1050px){
+      main{padding:var(--sp-5) 14px 96px}
+      .card{padding:var(--sp-4)}
+      #dashboard .premium-hero{margin-bottom:var(--sp-4)}
+      #dashboard .premium-panel{padding:var(--sp-4)}
+    }
+    @media(max-width:700px){
+      main{padding:18px 12px 96px}
+      .top{margin-bottom:var(--sp-4)}
+      .section-title{margin:var(--sp-6) 0 var(--sp-3)}
+      #dashboard .premium-title h2{font-size:28px}
+      #dashboard .premium-actions{
+        margin-top:var(--sp-3);
+        gap:var(--sp-2);
+      }
+      #dashboard .premium-btn{flex:1;text-align:center}
+      #dashboard .premium-kpi{min-height:auto}
+      #dashboard .premium-status>div{
+        justify-content:flex-start;
+        min-height:44px;
+      }
+    }
+
+
+    /* =========================================================
+       V4.5 — NOVA IDENTIDADE CLARA / VERDE-LIMÃO
+       Baseada no padrão visual enviado pelo usuário.
+       Apenas frontend: funções e armazenamento preservados.
+       ========================================================= */
+    :root{
+      --bg:#f3f8ee;
+      --panel:#ffffff;
+      --panel2:#f7faF3;
+      --line:#dbe7d2;
+      --text:#18231d;
+      --muted:#6d7b71;
+      --brand:#a8e600;
+      --brand2:#85c900;
+      --danger:#e44f5a;
+      --warn:#e6ad2e;
+      --ok:#238c57;
+      --shadow:0 16px 44px rgba(42,72,48,.10);
+      --radius:22px;
+    }
+
+    html{background:#f3f8ee}
+    body{
+      background:
+        radial-gradient(circle at 92% 30%,rgba(176,235,24,.32),transparent 28%),
+        radial-gradient(circle at 12% 12%,rgba(192,235,170,.26),transparent 30%),
+        linear-gradient(135deg,#f7fbf3 0%,#eef7e7 52%,#ddf39a 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    /* Sidebar */
+    .side{
+      background:rgba(248,251,244,.92);
+      border-right:1px solid rgba(117,145,105,.18);
+      box-shadow:10px 0 35px rgba(52,82,55,.05);
+      backdrop-filter:blur(18px);
+    }
+    .brand h1{color:#1d2a21}
+    .brand small{color:#78857c}
+    .logo{
+      background:linear-gradient(145deg,#b9ef2d,#86c900);
+      color:#214000;
+      box-shadow:0 8px 22px rgba(143,206,12,.28);
+    }
+    .navbtn{color:#66746a}
+    .navbtn:hover{
+      background:#edf5e8;
+      color:#1d2a21;
+    }
+    .navbtn.active{
+      background:linear-gradient(135deg,#eef7e2,#dff3ac);
+      color:#20351e;
+      box-shadow:inset 0 0 0 1px rgba(123,169,46,.14);
+      font-weight:700;
+    }
+    .sidefoot{
+      background:rgba(255,255,255,.82);
+      border-color:#dce8d4;
+      box-shadow:0 10px 30px rgba(45,75,46,.07);
+    }
+
+    /* Cabeçalhos */
+    .top h2,#dashboard .premium-title h2{color:#17221c}
+    .top p,#dashboard .premium-title p{color:#738078}
+    .muted,.meta{color:#7b887f!important}
+
+    /* Botões */
+    .btn,.premium-btn{
+      background:#fff!important;
+      color:#1c281f!important;
+      border:1px solid #d9e5d3!important;
+      box-shadow:0 6px 20px rgba(44,69,47,.06);
+    }
+    .btn:hover,.premium-btn:hover{
+      transform:translateY(-1px);
+      border-color:#bfd49f!important;
+      background:#fbfdf8!important;
+    }
+    .btn.primary,#dashboard .premium-btn.primary{
+      background:linear-gradient(180deg,#b4ee00,#96d700)!important;
+      border-color:#98d500!important;
+      color:#213300!important;
+      box-shadow:0 10px 24px rgba(149,208,0,.22)!important;
+    }
+    .btn.danger{color:#c83d48!important}
+
+    /* Cards e superfícies */
+    .card,
+    .resultBox,
+    .mini,
+    .health-stat,
+    .health-strip .box{
+      background:rgba(255,255,255,.90)!important;
+      color:#1a261e!important;
+      border-color:#d9e6d2!important;
+      box-shadow:0 12px 32px rgba(52,82,55,.08)!important;
+    }
+    .card{
+      backdrop-filter:blur(10px);
+    }
+    .kpi span,.kpi small,.mini span,.health-stat span{color:#748078!important}
+
+    /* Formulários */
+    .field label{color:#647269!important}
+    .field input,.field select, input, select{
+      background:#fff!important;
+      color:#1e2922!important;
+      border-color:#d9e4d3!important;
+      box-shadow:none!important;
+    }
+    .field input:focus,.field select:focus,input:focus,select:focus{
+      outline:none!important;
+      border-color:#9ed300!important;
+      box-shadow:0 0 0 3px rgba(168,230,0,.18)!important;
+    }
+
+    /* Tabelas */
+    table{background:transparent}
+    th{
+      color:#65736a!important;
+      background:#f7faf4;
+    }
+    th,td{border-bottom-color:#e4ece0!important}
+    td{color:#1b271f}
+    tbody tr:hover{background:#f8fbf5}
+
+    /* Mensagens / hints */
+    .hint{
+      background:#f2f9e9!important;
+      color:#355332!important;
+      border-color:#d3e9b9!important;
+    }
+    .pill{
+      background:#e8f7df!important;
+      color:#267044!important;
+    }
+    .pill.warn,.health-pill.warn{
+      background:#fff5d9!important;
+      color:#8c6810!important;
+    }
+    .pill.bad,.health-pill.risk{
+      background:#ffe8e9!important;
+      color:#b53943!important;
+    }
+    .health-pill.good{
+      background:#e2f6e9!important;
+      color:#23734a!important;
+    }
+
+    /* Barras */
+    .progress,.health-bar{
+      background:#eef3ea!important;
+      border-color:#d8e4d2!important;
+    }
+    .progress>i,
+    #dashboard .premium-progress i{
+      background:linear-gradient(90deg,#91d000,#c6f344)!important;
+    }
+    .health-bar.good i{background:#39a968!important}
+    .health-bar.warn i{background:#e4b541!important}
+    .health-bar.risk i{background:#e45862!important}
+
+    /* Modais */
+    .modal{background:rgba(26,42,31,.35)!important;backdrop-filter:blur(8px)}
+    .modal-card{
+      background:#fbfdf9!important;
+      color:#1b271f!important;
+      border-color:#d9e5d3!important;
+      box-shadow:0 32px 80px rgba(35,58,38,.22)!important;
+    }
+
+    /* Dashboard premium claro */
+    #dashboard{
+      --dash-card:#ffffff;
+      --dash-card-2:#f5f9f1;
+      --dash-border:#d8e5d1;
+      --dash-soft:#f5f8f1;
+      --dash-accent:#a8e600;
+      --dash-muted:#738078;
+    }
+
+    #dashboard .premium-kpi{
+      background:rgba(255,255,255,.92)!important;
+      border-color:#d9e5d3!important;
+      box-shadow:0 14px 34px rgba(49,77,51,.08);
+      color:#17231c;
+    }
+    #dashboard .premium-kpi::after{
+      background:radial-gradient(circle,rgba(167,229,0,.15),transparent 68%)!important;
+    }
+    #dashboard .premium-icon{
+      background:linear-gradient(180deg,#eef8d9,#dff1b4)!important;
+      color:#4d7612!important;
+      border:1px solid rgba(140,188,53,.16);
+    }
+    #dashboard .premium-kpi label{color:#68766d!important}
+    #dashboard .premium-kpi strong{color:#17231c}
+    #dashboard .premium-kpi small{color:#7b887f!important}
+    #dashboard .premium-kpi.risk{
+      background:linear-gradient(145deg,#fff,#fff5f4)!important;
+      border-color:#f0d3d3!important;
+    }
+    #dashboard .premium-kpi.risk .premium-icon{
+      background:#ffe7e7!important;
+      color:#c9434d!important;
+      border-color:#f3caca!important;
+    }
+    #dashboard .premium-kpi.risk strong{color:#d94d57!important}
+
+    #dashboard .premium-panel{
+      background:rgba(255,255,255,.90)!important;
+      border-color:#d8e5d1!important;
+      box-shadow:0 16px 42px rgba(52,82,55,.08);
+    }
+    #dashboard .premium-panel-title h3{color:#18241d}
+    #dashboard .premium-panel-title p{color:#77847b!important}
+
+    #dashboard .premium-metric,
+    #dashboard .premium-mini{
+      background:#f8fbf5!important;
+      border-color:#dfe9da!important;
+      color:#1b271f!important;
+    }
+    #dashboard .premium-metric span,
+    #dashboard .premium-mini span{color:#748078!important}
+    #dashboard .premium-metric b,
+    #dashboard .premium-mini b{color:#17231c}
+
+    #dashboard .premium-status{
+      background:linear-gradient(90deg,#f8fbf4,#f2f8e8)!important;
+      border-color:#dbe7d4!important;
+    }
+    #dashboard .premium-status>div+div{border-color:#dfe9da!important}
+
+    #dashboard .premium-info{
+      background:linear-gradient(135deg,#eff8e6,#f8fbdc)!important;
+      border-color:#cfe5af!important;
+      color:#36542f!important;
+    }
+    #dashboard .premium-fund-row{
+      border-bottom-color:#e3eadf!important;
+      color:#1c281f;
+    }
+    #dashboard .premium-progress{
+      background:#eef3ea!important;
+      border-color:#d7e3d1!important;
+    }
+
+    /* Seção em verde escuro para dar identidade sem pesar */
+    #dashboard .premium-bottom .premium-panel:last-child{
+      background:linear-gradient(135deg,#174f3b 0%,#2d7049 58%,#6e9c46 100%)!important;
+      border-color:transparent!important;
+      color:#fff!important;
+      box-shadow:0 20px 46px rgba(35,83,52,.20)!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child h3,
+    #dashboard .premium-bottom .premium-panel:last-child b{
+      color:#fff!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child p,
+    #dashboard .premium-bottom .premium-panel:last-child .meta{
+      color:rgba(255,255,255,.72)!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child .premium-icon{
+      background:rgba(255,255,255,.12)!important;
+      color:#dfff90!important;
+      border-color:rgba(255,255,255,.13)!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child .premium-fund-row{
+      border-bottom-color:rgba(255,255,255,.13)!important;
+    }
+    #dashboard .premium-bottom .premium-panel:last-child .premium-progress{
+      background:rgba(255,255,255,.13)!important;
+      border-color:rgba(255,255,255,.20)!important;
+    }
+
+    /* Saúde da precificação */
+    .health-row.good::before{background:#39a968!important}
+    .health-row.warn::before{background:#e5b846!important}
+    .health-row.risk::before{background:#e25b64!important}
+
+    /* Scrollbar */
+    *{scrollbar-color:#bddb86 #eef4e8}
+    ::selection{background:#c9f06e;color:#1a281c}
+
+    /* Responsivo */
+    @media(max-width:1050px){
+      .side{
+        background:rgba(249,252,246,.96);
+        border-color:#dce7d6;
+      }
+    }
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">iT</div>
+      <div><h1>iTronic Gestão</h1><small>Financeiro + Compras + Precificação</small></div>
+    </div>
+    <nav>
+      <button class="navbtn active" data-view="dashboard">Visão Geral</button>
+      <button class="navbtn" data-view="pricing">Precificação</button>
+      <button class="navbtn" data-view="purchases">Compras</button>
+      <button class="navbtn" data-view="invoices">Notas Fiscais</button>
+      <button class="navbtn" data-view="inventory">Estoque</button>
+      <button class="navbtn" data-view="service">Assistência</button>
+      <button class="navbtn" data-view="cash">Caixa & Fechamento</button>
+      <button class="navbtn" data-view="debts">Dívidas</button>
+      <button class="navbtn" data-view="plan">Plano de Ação</button>
+    </nav>
+    <div class="sidefoot">
+      <b>Meta principal</b>
+      <span>Voltar ao lucro sem consumir capital de giro.</span>
+    </div>
+  </aside>
+
+  <main>
+    <div class="top">
+      <div>
+        <h2 id="pageTitle">Visão Geral</h2>
+        <p id="pageSub">Os números que determinam se a loja está ficando mais forte.</p>
+      </div>
+      <div class="actions">
+        <button class="btn" id="exportBtn">Exportar dados</button>
+        <label class="btn">Importar<input id="importFile" type="file" accept=".json" hidden></label>
+        <button class="btn danger" id="resetBtn">Limpar teste</button>
+      </div>
+    </div>
+
+    
+<section id="dashboard" class="section active">
+  <div class="premium-hero">
+    <div class="premium-title">
+      <h2>Visão Geral</h2>
+      <p>Os números que determinam se a loja está ficando mais forte.</p>
+    </div>
+    <div class="premium-actions">
+      <button class="premium-btn" id="dashExportBtn">Exportar dados</button>
+      <label class="premium-btn">Importar<input id="dashImportFile" type="file" accept=".json" hidden></label>
+      <button class="premium-btn primary" id="dashResetBtn">Limpar teste</button>
+    </div>
+  </div>
+
+  <div class="premium-kpis">
+    <div class="premium-kpi">
+      <div class="premium-kpi-top"><div class="premium-icon">▥</div><span>›</span></div>
+      <label>Receita do mês</label><strong id="kRevenue">R$ 0,00</strong><small>Faturamento registrado</small>
+    </div>
+    <div class="premium-kpi">
+      <div class="premium-kpi-top"><div class="premium-icon">%</div><span>›</span></div>
+      <label>Margem de contribuição</label><strong id="kContribution">R$ 0,00</strong><small>Após custos variáveis</small>
+    </div>
+    <div class="premium-kpi risk">
+      <div class="premium-kpi-top"><div class="premium-icon">↘</div><span>›</span></div>
+      <label>Resultado estimado</label><strong id="kResult">R$ 0,00</strong><small>Após estrutura informada</small>
+    </div>
+    <div class="premium-kpi">
+      <div class="premium-kpi-top"><div class="premium-icon">◈</div><span>›</span></div>
+      <label>Capital protegido</label><strong id="kProtected">R$ 50.000,00</strong><small>Disponível do fundo</small>
+    </div>
+  </div>
+
+  <div class="premium-panel">
+    <div class="premium-panel-head">
+      <div class="premium-panel-title">
+        <div class="premium-icon">◇</div>
+        <div><h3>Indicadores da precificação</h3><p>Visão rápida da performance dos produtos precificados.</p></div>
+      </div>
+      <div class="muted">›</div>
+    </div>
+
+    <div class="premium-metrics">
+      <div class="premium-metric"><span>Margem média</span><b id="kAvgMargin">0%</b><div class="meta">Da sua precificação</div></div>
+      <div class="premium-metric"><span>Margem ponderada</span><b id="kWeightedMargin">0%</b><div class="meta">Considerando o mix comprado</div></div>
+      <div class="premium-metric"><span>Sobra média por unidade</span><b id="kAvgProfit">R$ 0,00</b><div class="meta">Após custos variáveis</div></div>
+      <div class="premium-metric"><span>SKUs precificados</span><b id="kPricedCount">0</b><div class="meta"><span id="kQueueCount">0</span> aguardando preço</div></div>
+    </div>
+
+    <div class="premium-status">
+      <div><span class="dot good"></span><b id="dashHealthGood">0 SKUs</b><span class="meta">com margem saudável</span></div>
+      <div><span class="dot warn"></span><b id="dashHealthWarn">0 SKUs</b><span class="meta">em atenção</span></div>
+      <div><span class="dot risk"></span><b id="dashHealthRisk">0 SKUs</b><span class="meta">com margem baixa</span></div>
+    </div>
+  </div>
+
+  <div class="premium-bottom">
+    <div class="premium-panel" style="margin-top:0">
+      <div class="premium-panel-title">
+        <div class="premium-icon">⌁</div>
+        <div><h3>Saúde financeira</h3><p>Leitura simples para decisão diária.</p></div>
+      </div>
+
+      <div class="premium-finance-row">
+        <div class="premium-mini"><span>CMV do mês</span><b id="dCMV">R$ 0,00</b></div>
+        <div class="premium-mini"><span>Despesas fixas</span><b id="dFixed">R$ 0,00</b></div>
+        <div class="premium-mini"><span>Pró-labore</span><b id="dProlabore">R$ 0,00</b></div>
+        <div class="premium-mini"><span>Juros do fundo</span><b id="dInterest">R$ 750,00</b></div>
+      </div>
+
+      <div class="premium-info" id="healthHint">Comece registrando compras e preços. O painel vai ficando mais preciso conforme os dados reais entram.</div>
+    </div>
+
+    <div class="premium-panel" style="margin-top:0">
+      <div class="premium-panel-title">
+        <div class="premium-icon">♧</div>
+        <div><h3>Fundo de crescimento</h3><p>R$ 50 mil devem continuar existindo em caixa + estoque.</p></div>
+      </div>
+
+      <div class="premium-fund-body">
+        <div class="premium-fund-row"><div><b>Capital contratado</b><div class="meta">Principal</div></div><b>R$ 50.000</b></div>
+        <div class="premium-fund-row"><div><b>Usado em compras</b><div class="meta">Capital aplicado</div></div><b id="fundUsed">R$ 0,00</b></div>
+        <div class="premium-fund-row"><div><b>Disponível</b><div class="meta">Reserva ainda não usada</div></div><b id="fundAvailable">R$ 50.000,00</b></div>
+        <div class="premium-fund-row"><div><b>Juros mensais</b><div class="meta">1,5% a.m.</div></div><b>R$ 750,00</b></div>
+      </div>
+      <div class="premium-progress"><i id="fundBar"></i></div>
+    </div>
+  </div>
+
+  <div style="display:none">
+    <span id="kAvgMarkup">0%</span>
+    <span id="kStockCapital">R$ 0,00</span>
+    <span id="kPotentialRevenue">R$ 0,00</span>
+    <span id="kPotentialContribution">R$ 0,00</span>
+    <span id="pricingExecutiveHint"></span>
+    <span id="dashInvoiceCount"></span>
+    <span id="dashPurchaseLines"></span>
+    <span id="dashUniquePriced"></span>
+    <span id="dashQueue"></span>
+  </div>
+</section>
+
+    <section id="pricing" class="section">
+      <div class="card" style="margin-bottom:16px">
+        <div class="section-title" style="margin-top:0">
+          <div>
+            <h3>Taxas padrão da iTronic</h3>
+            <p>Altere aqui sempre que cartão, comissão, imposto ou desconto no PIX mudarem.</p>
+          </div>
+          <button class="btn primary" id="saveRates">Salvar taxas</button>
+        </div>
+        <div class="form cols">
+          <div class="field"><label>Cartão 3x (%)</label><input id="rateCard" type="number" step="0.01" value="5.37"></div>
+          <div class="field"><label>Comissão (%)</label><input id="rateCommission" type="number" step="0.01" value="2"></div>
+          <div class="field"><label>Imposto (%)</label><input id="rateTax" type="number" step="0.01" value="8"></div>
+          <div class="field"><label>Desconto PIX / dinheiro (%)</label><input id="ratePixDiscount" type="number" step="0.01" value="5"></div>
+        </div>
+        <div class="hint" style="margin-top:14px">Esses valores viram o padrão das próximas precificações, mas os campos do produto continuam editáveis individualmente.</div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><div><h3>Simulador de preço</h3><p>Descubra preço, markup, margem e preço mínimo.</p></div></div>
+          <div class="form cols">
+            <div class="field"><label>Produto</label><input id="pName" placeholder="Ex.: Cabo USB-C"></div>
+            <div class="field"><label>Categoria</label><select id="pCategory">
+              <option>Acessórios</option><option>Capinhas</option><option>Películas</option>
+              <option>Cabos</option><option>Fones</option><option>Carregadores</option>
+              <option>Pulseiras</option><option>Starlink</option><option>iPhone</option><option>Outros</option>
+            </select></div>
+            <div class="field"><label>Custo de compra (R$)</label><input id="pCost" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Frete/rateio unitário (R$)</label><input id="pFreight" type="number" step="0.01" value="0">
+              <div class="meta" id="pFreightSource" style="margin-top:5px">Preenchido automaticamente ao abrir um item da fila.</div>
+            </div>
+            <div class="field"><label>Preço de venda (R$)</label><input id="pPrice" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Taxa do cartão (%)</label><input id="pCard" type="number" step="0.01" value="5.37"></div>
+            <div class="field"><label>Comissão (%)</label><input id="pCommission" type="number" step="0.01" value="2"></div>
+            <div class="field"><label>Imposto estimado (%)</label><input id="pTax" type="number" step="0.01" value="8"></div>
+            <div class="field"><label>Reserva garantia (%)</label><input id="pWarranty" type="number" step="0.01" value="0"></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px"><button class="btn primary" id="calcPrice">Calcular</button><button class="btn" id="saveProduct">Salvar produto</button></div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><div><h3>Resultado da precificação</h3><p>O que sobra de verdade antes das despesas fixas.</p></div></div>
+          <div class="mini-grid">
+            <div class="mini"><span>Custo efetivo</span><b id="rEffective">R$ 0,00</b></div>
+            <div class="mini"><span>CMV</span><b id="rCMV">R$ 0,00</b></div>
+            <div class="mini"><span>Markup</span><b id="rMarkup">0%</b></div>
+            <div class="mini"><span>Margem contribuição</span><b id="rMargin">0%</b></div>
+            <div class="mini"><span>Contribuição em R$</span><b id="rContribution">R$ 0,00</b></div>
+            <div class="mini"><span>Preço mínimo sem prejuízo</span><b id="rMin">R$ 0,00</b></div>
+            <div class="mini"><span>Preço PIX sugerido</span><b id="rPixPrice">R$ 0,00</b></div>
+            <div class="mini"><span>Margem PIX</span><b id="rPixMargin">0%</b></div>
+          </div>
+          <div id="priceHint" class="hint" style="margin-top:14px">Digite custo e preço para começar.</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="section-title" style="margin-top:0">
+          <div><h3>Fila de precificação</h3><p><span id="pricingQueueCount">0</span> produto(s) ainda aguardando preço.</p></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" id="copyPricingQueue">Copiar lista</button>
+            <button class="btn" id="exportPricingQueue">Exportar CSV</button>
+          </div>
+        </div>
+        <div style="overflow:auto"><table><thead><tr><th>Produto</th><th>Categoria</th><th>Qtd.</th><th>Custo efetivo</th><th>Ações</th></tr></thead><tbody id="pricingQueueRows"></tbody></table></div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="section-title" style="margin-top:0"><div><h3>Produtos precificados</h3><p>Base real da loja.</p></div></div>
+        <div style="overflow:auto"><table><thead><tr><th>Produto</th><th>Custo</th><th>Venda</th><th>Lucro da venda*</th><th>Markup</th><th>Margem</th><th></th></tr></thead><tbody id="productRows"></tbody></table></div>
+        <div class="meta" style="margin-top:10px">* Lucro da venda = valor que sobra por unidade após custo efetivo, cartão, comissão, imposto e reserva de garantia. Ainda não desconta aluguel, energia, folha e outras despesas fixas.</div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="section-title" style="margin-top:0;align-items:flex-start">
+          <div>
+            <h3>Saúde da Precificação</h3>
+            <p>O sistema analisa automaticamente custo x preço x taxas e destaca onde sua margem está saudável ou em risco.</p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
+            <div class="field" style="margin:0;min-width:145px">
+              <label>Vermelho abaixo de (%)</label>
+              <input id="healthRedBelow" type="number" step="0.1" value="25">
+            </div>
+            <div class="field" style="margin:0;min-width:145px">
+              <label>Verde a partir de (%)</label>
+              <input id="healthGreenMin" type="number" step="0.1" value="45">
+            </div>
+            <button class="btn" id="saveHealthRules">Salvar limites</button>
+          </div>
+        </div>
+
+        <div class="health-summary">
+          <div class="health-stat good"><span>MUITO BOM</span><b id="healthGoodCount">0</b></div>
+          <div class="health-stat warn"><span>ALERTA</span><b id="healthWarnCount">0</b></div>
+          <div class="health-stat risk"><span>MUITO RISCO</span><b id="healthRiskCount">0</b></div>
+        </div>
+
+        <div class="hint" style="margin-top:14px">
+          Regra padrão: analisamos a <b>margem de contribuição no cartão</b>, já descontando custo efetivo, taxa do cartão, comissão, imposto e reserva de garantia do produto. Verde = margem forte; amarelo = merece atenção; vermelho = custo alto para o preço praticado.
+        </div>
+
+        <div style="overflow:auto;margin-top:14px">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Produto</th>
+                <th>Custo efetivo</th>
+                <th>Venda</th>
+                <th>Custo/Venda</th>
+                <th>Margem contribuição</th>
+                <th>Sobra em R$</th>
+                <th>Leitura</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="pricingHealthRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="purchases" class="section">
+      <div class="grid two">
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><div><h3>Registrar compra</h3><p>Use para a compra de Goiânia e reposições futuras.</p></div></div>
+          <div class="form cols">
+            <div class="field"><label>Produto</label><input id="bName" placeholder="Produto"></div>
+            <div class="field"><label>Fornecedor</label><input id="bSupplier" placeholder="Fornecedor"></div>
+            <div class="field"><label>Quantidade</label><input id="bQty" type="number" value="1" min="1"></div>
+            <div class="field"><label>Custo unitário</label><input id="bUnit" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Frete/rateio total</label><input id="bFreight" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Origem do dinheiro</label><select id="bFund"><option value="caixa">Caixa da loja</option><option value="fundo">Fundo R$ 50 mil</option></select></div>
+          </div>
+          <button class="btn primary" id="addPurchase" style="margin-top:14px">Adicionar compra</button>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="section-title" style="margin-top:0">
+            <div>
+              <h3>Frete geral da compra / viagem</h3>
+              <p>Use quando um único frete atende várias notas da mesma compra.</p>
+            </div>
+          </div>
+          <div class="form cols">
+            <div class="field"><label>Valor total do frete da compra</label><input id="batchFreight" type="number" step="0.01" value="350"></div>
+            <div class="field"><label>Aplicar em</label>
+              <select id="batchFreightScope">
+                <option value="allInvoices">Todas as notas importadas</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn primary" id="applyBatchFreight" style="margin-top:14px">Ratear frete entre todas as notas</button>
+          <div class="hint" style="margin-top:14px">
+            O sistema zera os fretes anteriores dessas notas e distribui apenas este valor total entre todos os produtos, proporcionalmente ao valor comprado.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><div><h3>Regra do capital</h3><p>O dinheiro não pode desaparecer.</p></div></div>
+          <div class="hint">Toda compra feita com o fundo deve permanecer identificável como <b>dinheiro em caixa + estoque ao custo</b>. Quando o produto vender, o custo volta para o fundo antes de considerar lucro.</div>
+          <div class="mini-grid" style="margin-top:14px">
+            <div class="mini"><span>Mercadorias</span><b id="purchaseMerchTotal">R$ 0,00</b></div>
+            <div class="mini"><span>Frete total aplicado</span><b id="purchaseFreightTotal">R$ 0,00</b></div>
+            <div class="mini"><span>Total investido</span><b id="purchaseTotal">R$ 0,00</b></div>
+            <div class="mini"><span>Compras pelo fundo</span><b id="purchaseFundTotal">R$ 0,00</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="section-title" style="margin-top:0"><div><h3>Histórico de compras</h3><p>Agora mostrando mercadoria, frete rateado e custo efetivo separadamente.</p></div></div>
+        <div style="overflow:auto">
+          <table>
+            <thead><tr><th>Produto</th><th>Qtd.</th><th>Custo compra</th><th>Frete rateado</th><th>Custo efetivo</th><th>Total</th><th>NF</th><th>Origem</th></tr></thead>
+            <tbody id="purchaseRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="invoices" class="section">
+      <div class="grid two">
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><div><h3>Importar Nota Fiscal</h3><p>Envie o PDF da DANFE. Nada entra no estoque sem conferência.</p></div></div>
+          <div class="field"><label>PDF da nota</label><input id="nfFile" type="file" accept="application/pdf"></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+            <button class="btn primary" id="readNF">Ler nota fiscal</button>
+            <button class="btn" id="clearNFDraft">Limpar conferência</button>
+          </div>
+          <div id="nfStatus" class="hint" style="margin-top:14px">O sistema extrai os dados e abre tudo para você revisar antes do lançamento.</div>
+          <div class="section-title"><div><h3>Dados da nota</h3><p>Corrija qualquer informação antes de confirmar.</p></div></div>
+          <div class="form cols">
+            <div class="field"><label>Fornecedor</label><input id="nfSupplier" placeholder="Fornecedor"></div>
+            <div class="field"><label>Número da NF</label><input id="nfNumber" placeholder="Número"></div>
+            <div class="field"><label>Data</label><input id="nfDate" type="date"></div>
+            <div class="field"><label>Frete adicional fora da NF (R$)</label><input id="nfExtraFreight" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Origem do dinheiro</label><select id="nfFund"><option value="caixa">Caixa da loja</option><option value="fundo">Fundo R$ 50 mil</option></select></div>
+            <div class="field"><label>Rateio do frete</label><input value="Automático — proporcional ao valor de cada item" disabled></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><div><h3>Resumo da importação</h3><p>Conferência da compra antes da entrada.</p></div></div>
+          <div class="mini-grid">
+            <div class="mini"><span>Itens encontrados</span><b id="nfItemCount">0</b></div>
+            <div class="mini"><span>Unidades</span><b id="nfUnitCount">0</b></div>
+            <div class="mini"><span>Total dos produtos</span><b id="nfGrandTotal">R$ 0,00</b></div>
+            <div class="mini"><span>Total com frete</span><b id="nfWithFreight">R$ 0,00</b></div>
+          </div>
+          <div class="hint warning" style="margin-top:14px">A descrição fiscal fica preservada. O <b>Nome na loja</b> é separado e pode ser corrigido para o padrão da iTronic. O frete informado é rateado automaticamente entre todos os produtos da nota, proporcionalmente ao valor comprado de cada item.</div>
+          <div class="row"><div><b>Depois da confirmação</b><div class="meta">Fluxo automático</div></div><b>Estoque → Precificação</b></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="section-title" style="margin-top:0">
+          <div><h3>Conferir produtos</h3><p>Edite nome, categoria, quantidade e custo antes de lançar.</p></div>
+          <button class="btn primary" id="confirmNF">Confirmar entrada no estoque</button>
+        </div>
+        <div style="overflow:auto">
+          <table>
+            <thead><tr><th>Código</th><th>Descrição original</th><th>Nome na loja</th><th>Categoria</th><th>Qtd.</th><th>Custo unit.</th><th>Frete rateado</th><th>Custo efetivo</th><th>Total</th><th></th></tr></thead>
+            <tbody id="nfRows"><tr><td colspan="10"><div class="empty">Nenhuma nota carregada.</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="section-title" style="margin-top:0"><div><h3>Notas importadas</h3><p>Histórico das entradas confirmadas.</p></div></div>
+        <div style="overflow:auto">
+          <table>
+            <thead><tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Itens</th><th>Produtos</th><th>Frete</th><th>Total c/ frete</th><th>Ações</th></tr></thead>
+            <tbody id="invoiceHistoryRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="inventory" class="section">
+      <div class="card">
+        <div class="section-title" style="margin-top:0"><div><h3>Estoque inteligente</h3><p>A quantidade não importa tanto quanto o giro.</p></div></div>
+        <div class="hint warning">Aqui vamos classificar depois em Curva A, B e C. Primeiro registre as compras e preços reais. Produtos sem giro devem aparecer como capital parado; itens que zeram com frequência devem virar prioridade de reposição.</div>
+        <div style="overflow:auto;margin-top:14px"><table><thead><tr><th>Produto</th><th>Qtd.</th><th>Custo unit.</th><th>Capital em estoque</th><th>Status</th></tr></thead><tbody id="inventoryRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="service" class="section">
+      <div class="grid two">
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><div><h3>Precificar assistência</h3><p>Peça + técnico + frete + risco de garantia.</p></div></div>
+          <div class="form cols">
+            <div class="field"><label>Serviço</label><input id="sName" placeholder="Ex.: Bateria iPhone 13"></div>
+            <div class="field"><label>Custo da peça</label><input id="sPart" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Mão de obra terceirizada</label><input id="sLabor" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Frete/rateio</label><input id="sFreight" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Preço cobrado</label><input id="sPrice" type="number" step="0.01" value="0"></div>
+            <div class="field"><label>Reserva garantia (%)</label><input id="sWarranty" type="number" step="0.01" value="3"></div>
+          </div>
+          <button class="btn primary" id="calcService" style="margin-top:14px">Calcular serviço</button>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><div><h3>Resultado</h3><p>Margem bruta do serviço.</p></div></div>
+          <div class="mini-grid">
+            <div class="mini"><span>Custo total</span><b id="sCostOut">R$ 0,00</b></div>
+            <div class="mini"><span>Sobra bruta</span><b id="sProfitOut">R$ 0,00</b></div>
+            <div class="mini"><span>Margem</span><b id="sMarginOut">0%</b></div>
+            <div class="mini"><span>Markup</span><b id="sMarkupOut">0%</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cash" class="section">
+      <div class="card">
+        <div class="section-title" style="margin-top:0"><div><h3>Fechamento mensal</h3><p>Separar faturamento de dinheiro que realmente sobra.</p></div></div>
+        <div class="form cols">
+          <div class="field"><label>Receita com produtos</label><input id="cProdRev" type="number" step="0.01" value="0"></div>
+          <div class="field"><label>Receita com serviços</label><input id="cServRev" type="number" step="0.01" value="0"></div>
+          <div class="field"><label>CMV produtos</label><input id="cProdCost" type="number" step="0.01" value="0"></div>
+          <div class="field"><label>Custos serviços</label><input id="cServCost" type="number" step="0.01" value="0"></div>
+          <div class="field"><label>Despesas fixas</label><input id="cFixed" type="number" step="0.01" value="9000"></div>
+          <div class="field"><label>Pró-labore</label><input id="cProlabore" type="number" step="0.01" value="8000"></div>
+          <div class="field"><label>Financeiras / dívidas</label><input id="cFinancial" type="number" step="0.01" value="0"></div>
+          <div class="field"><label>Impostos e outras</label><input id="cOther" type="number" step="0.01" value="0"></div>
+        </div>
+        <button class="btn primary" id="saveClose" style="margin-top:14px">Atualizar painel</button>
+      </div>
+    </section>
+
+    <section id="debts" class="section">
+      <div class="card">
+        <div class="section-title" style="margin-top:0"><div><h3>Dívidas e compromissos</h3><p>Depois vamos comparar custo de cada dívida e atacar as mais caras.</p></div></div>
+        <div class="form cols">
+          <div class="field"><label>Nome</label><input id="dName" placeholder="Ex.: Empréstimo banco"></div>
+          <div class="field"><label>Saldo devedor</label><input id="dBalance" type="number" step="0.01" value="0"></div>
+          <div class="field"><label>Parcela mensal</label><input id="dPayment" type="number" step="0.01" value="0"></div>
+          <div class="field"><label>Juros ao mês (%)</label><input id="dRate" type="number" step="0.01" value="0"></div>
+        </div>
+        <button class="btn primary" id="addDebt" style="margin-top:14px">Adicionar dívida</button>
+        <div style="overflow:auto;margin-top:14px"><table><thead><tr><th>Dívida</th><th>Saldo</th><th>Parcela</th><th>Juros</th></tr></thead><tbody id="debtRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="plan" class="section">
+      <div class="grid three">
+        <div class="card"><span class="pill">FASE 1</span><h3>Parar o prejuízo</h3><p class="muted">Mapear custo real, corrigir precificação, comprar apenas giro e fechar o mês com resultado não negativo.</p></div>
+        <div class="card"><span class="pill warn">FASE 2</span><h3>Gerar caixa</h3><p class="muted">Aumentar margem de acessórios e assistência, reduzir capital parado e organizar dívidas/retiradas.</p></div>
+        <div class="card"><span class="pill">FASE 3</span><h3>Crescer com controle</h3><p class="muted">Metas por categoria, recompra automática, reserva de caixa e expansão apenas com lucro recorrente.</p></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="section-title" style="margin-top:0"><div><h3>Checklist da recuperação</h3><p>Sem pular etapa.</p></div></div>
+        <div class="list" id="checklist"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+
+<div id="editModal" class="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <h3 id="editModalTitle">Editar item</h3>
+        <div class="muted" id="editModalSub">Corrija os dados e salve.</div>
+      </div>
+      <button class="btn" id="closeEditModal">Fechar</button>
+    </div>
+
+    <div class="form cols" id="editQueueFields">
+      <div class="field"><label>Produto</label><input id="editName"></div>
+      <div class="field"><label>Categoria</label>
+        <select id="editCategory">
+          <option>Acessórios</option><option>Capinhas</option><option>Películas</option>
+          <option>Cabos</option><option>Fones</option><option>Carregadores</option>
+          <option>Pulseiras</option><option>Starlink</option><option>iPhone</option><option>Outros</option>
+        </select>
+      </div>
+      <div class="field"><label>Quantidade</label><input id="editQty" type="number" min="0" step="1"></div>
+      <div class="field"><label>Custo efetivo unitário</label><input id="editCost" type="number" min="0" step="0.01"></div>
+      <div class="field" id="editPriceWrap" style="display:none"><label>Preço de venda</label><input id="editPrice" type="number" min="0" step="0.01"></div>
+    </div>
+
+    <div class="hint" style="margin-top:14px">
+      Ao editar um item da fila, o sistema também corrige a compra/estoque correspondente quando ela veio de uma nota fiscal.
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="cancelEditModal">Cancelar</button>
+      <button class="btn primary" id="saveEditModal">Salvar alteração</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const money = n => (Number(n)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const pct = n => `${(Number(n)||0).toFixed(1).replace('.',',')}%`;
+const $ = id => document.getElementById(id);
+const state = JSON.parse(localStorage.getItem('itronicFinanceV1')||'null') || {
+  products:[], purchases:[], debts:[], invoices:[], pricingQueue:[], rates:{card:5.37,commission:2,tax:8,pixDiscount:5}, health:{greenMin:45,redBelow:25}, close:{prodRev:0,servRev:0,prodCost:0,servCost:0,fixed:9000,prolabore:8000,financial:0,other:0},
+  checklist:[
+    {t:'Registrar a compra real de Goiânia',done:false},
+    {t:'Precificar todos os acessórios novos',done:false},
+    {t:'Separar custo, margem e markup de cada categoria',done:false},
+    {t:'Mapear todas as dívidas e juros atuais',done:false},
+    {t:'Definir pró-labore sustentável',done:false},
+    {t:'Criar ponto de equilíbrio mensal real',done:false},
+    {t:'Classificar estoque em giro A / B / C',done:false},
+    {t:'Definir regra de reposição automática',done:false}
+  ]
+};
+state.invoices = state.invoices || [];
+state.pricingQueue = state.pricingQueue || [];
+state.products = state.products || [];
+state.purchases = state.purchases || [];
+state.debts = state.debts || [];
+state.rates = state.rates || {card:5.37,commission:2,tax:8,pixDiscount:5};
+state.health = state.health || {greenMin:45,redBelow:25};
+
+let currentPricingQueueId = null;
+
+function makeQueueId(){
+  return 'q_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,9);
+}
+
+// Migração automática: itens antigos da fila recebem um ID persistente.
+// Isso evita depender do nome do produto para remover o item após salvar.
+state.pricingQueue.forEach(q=>{
+  if(!q._qid) q._qid = makeQueueId();
+});
+
+function save(){ localStorage.setItem('itronicFinanceV1',JSON.stringify(state)); render(); }
+
+document.querySelectorAll('.navbtn').forEach(btn=>btn.onclick=()=>{
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  $(btn.dataset.view).classList.add('active');
+  const titles={
+    dashboard:['Visão Geral','Os números que determinam se a loja está ficando mais forte.'],
+    pricing:['Precificação','Preço certo antes de vender.'],
+    purchases:['Compras','Transformar compra em capital de giro, não em estoque parado.'],
+    invoices:['Notas Fiscais','Importar, conferir e transformar NF em estoque e fila de precificação.'],
+    inventory:['Estoque','Dinheiro parado e oportunidade de reposição.'],
+    service:['Assistência','Conhecer a margem real de cada serviço.'],
+    cash:['Caixa & Fechamento','Fechar o mês com números simples e verdadeiros.'],
+    debts:['Dívidas','Saber quanto custa o dinheiro que a empresa usa.'],
+    plan:['Plano de Ação','Reerguer primeiro. Escalar depois.']
+  };
+  $('pageTitle').textContent=titles[btn.dataset.view][0]; $('pageSub').textContent=titles[btn.dataset.view][1];
+  const genericTop=document.querySelector('.top');
+  if(genericTop) genericTop.style.display=btn.dataset.view==='dashboard'?'none':'flex';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+function calcProduct(){
+  const cost=+$('pCost').value, freight=+$('pFreight').value, price=+$('pPrice').value;
+  const card=+$('pCard').value/100, commission=+$('pCommission').value/100, tax=+$('pTax').value/100, warranty=+$('pWarranty').value/100;
+  const eff=cost+freight;
+  const variable=price*(card+commission+tax+warranty);
+  const contribution=price-eff-variable;
+  const markup=eff>0?((price/eff)-1)*100:0;
+  const margin=price>0?(contribution/price)*100:0;
+  const rate=card+commission+tax+warranty;
+  const min=rate<1?eff/(1-rate):0;
+  const pixDiscount=(state.rates.pixDiscount||0)/100;
+  const pixPrice=price*(1-pixDiscount);
+  const pixVariableRate=((state.rates.commission||0)+(state.rates.tax||0))/100 + warranty;
+  const pixContribution=pixPrice-eff-(pixPrice*pixVariableRate);
+  const pixMargin=pixPrice>0?(pixContribution/pixPrice)*100:0;
+  $('rEffective').textContent=money(eff); $('rCMV').textContent=money(eff); $('rMarkup').textContent=pct(markup); $('rMargin').textContent=pct(margin); $('rContribution').textContent=money(contribution); $('rMin').textContent=money(min);
+  $('rPixPrice').textContent=money(pixPrice); $('rPixMargin').textContent=pct(pixMargin);
+  const hint=$('priceHint');
+  hint.className='hint';
+  if(price<=0||eff<=0){hint.textContent='Digite custo e preço para começar.'}
+  else if(contribution<0){hint.classList.add('dangerbox');hint.textContent='Venda no prejuízo. O preço não cobre o custo efetivo e os custos variáveis.'}
+  else if(margin<20){hint.classList.add('warning');hint.textContent='Margem baixa. Pode fazer sentido em alguns iPhones, mas precisa ser consciente e compensada por outras categorias.'}
+  else {hint.textContent=`De cada R$ 100 vendidos, aproximadamente ${pct(margin)} ficam como margem de contribuição antes das despesas fixas.`}
+  return {eff,price,markup,margin,contribution,min};
+}
+$('saveRates').onclick=()=>{
+  state.rates={
+    card:Math.max(0,+$('rateCard').value||0),
+    commission:Math.max(0,+$('rateCommission').value||0),
+    tax:Math.max(0,+$('rateTax').value||0),
+    pixDiscount:Math.max(0,+$('ratePixDiscount').value||0)
+  };
+  $('pCard').value=state.rates.card;
+  $('pCommission').value=state.rates.commission;
+  $('pTax').value=state.rates.tax;
+  save();
+  alert('Taxas padrão atualizadas.');
+};
+
+
+function pricingHealth(product){
+  const price=Number(product.price)||0;
+  const cost=Number(product.cost)||0;
+  const warranty=(Number(product.warrantyRate)||0)/100;
+  const card=(Number(state.rates?.card)||0)/100;
+  const commission=(Number(state.rates?.commission)||0)/100;
+  const tax=(Number(state.rates?.tax)||0)/100;
+  const variableRate=card+commission+tax+warranty;
+
+  const contribution=price-cost-(price*variableRate);
+  const margin=price>0?(contribution/price)*100:0;
+  const costRatio=price>0?(cost/price)*100:0;
+
+  const greenMin=Number(state.health?.greenMin ?? 45);
+  const redBelow=Number(state.health?.redBelow ?? 25);
+
+  let status='warn', label='ALERTA', reason='Margem intermediária. Vale revisar custo, preço ou condição de venda.';
+  if(price<=0 || contribution<=0 || margin<redBelow){
+    status='risk';
+    label='MUITO RISCO';
+    if(contribution<=0) reason='O preço atual não cobre custo efetivo e custos variáveis.';
+    else reason='Custo alto para o preço praticado. A margem de contribuição está muito baixa.';
+  }else if(margin>=greenMin){
+    status='good';
+    label='MUITO BOM';
+    reason='Preço saudável. Boa margem para ajudar a pagar a estrutura da loja e gerar resultado.';
+  }
+
+  return {status,label,reason,contribution,margin,costRatio,variableRate};
+}
+
+$('saveHealthRules').onclick=()=>{
+  const redBelow=Math.max(0,+$('healthRedBelow').value||0);
+  const greenMin=Math.max(0,+$('healthGreenMin').value||0);
+  if(greenMin<=redBelow) return alert('O limite verde precisa ser maior que o limite vermelho.');
+  state.health={redBelow,greenMin};
+  save();
+  alert('Limites da saúde da precificação atualizados.');
+};
+
+$('calcPrice').onclick=calcProduct;
+$('saveProduct').onclick=()=>{
+  const r=calcProduct();
+  const name=$('pName').value.trim();
+  if(!name||r.eff<=0||r.price<=0) return alert('Informe produto, custo e preço.');
+
+  const category=$('pCategory').value;
+  const norm=s=>String(s||'').trim().toLowerCase();
+
+  // Se veio da fila, atualiza o produto correspondente em vez de criar duplicado.
+  let productIndex=-1;
+  if(currentPricingQueueId){
+    productIndex=state.products.findIndex(p=>p.sourceQueueId===currentPricingQueueId);
+  }
+  if(productIndex<0){
+    productIndex=state.products.findIndex(p=>norm(p.name)===norm(name) && p.category===category);
+  }
+
+  const savedProduct={
+    name,
+    category,
+    cost:r.eff,
+    price:r.price,
+    markup:r.markup,
+    margin:r.margin,
+    warrantyRate:Math.max(0,+$('pWarranty').value||0),
+    sourceQueueId:currentPricingQueueId||null
+  };
+
+  if(productIndex>=0) state.products[productIndex]={...state.products[productIndex],...savedProduct};
+  else state.products.push(savedProduct);
+
+  // Remove EXATAMENTE o item que foi aberto pela fila.
+  let removed=false;
+  if(currentPricingQueueId){
+    const qi=state.pricingQueue.findIndex(x=>x._qid===currentPricingQueueId);
+    if(qi>=0){
+      state.pricingQueue.splice(qi,1);
+      removed=true;
+    }
+  }
+
+  // Fallback para itens muito antigos que ainda não tenham ID.
+  if(!removed){
+    const qi=state.pricingQueue.findIndex(x=>norm(x.name)===norm(name));
+    if(qi>=0) state.pricingQueue.splice(qi,1);
+  }
+
+  currentPricingQueueId=null;
+
+  if(state.checklist?.length && state.pricingQueue.length===0) state.checklist[1].done=true;
+
+  save();
+
+  // Limpa o formulário para deixar claro que o item foi concluído.
+  $('pName').value='';
+  $('pCost').value='0';
+  $('pFreight').value='0';
+  $('pPrice').value='0';
+  if($('pFreightSource')) $('pFreightSource').textContent='Preenchido automaticamente ao abrir um item da fila.';
+
+  alert('Produto salvo e removido da fila de precificação.');
+};
+
+$('addPurchase').onclick=()=>{
+  const name=$('bName').value.trim(), supplier=$('bSupplier').value.trim(), qty=+$('bQty').value, unit=+$('bUnit').value, freight=+$('bFreight').value;
+  if(!name||qty<=0||unit<0)return alert('Preencha produto, quantidade e custo.');
+  const total=qty*unit+freight, eff=total/qty;
+  state.purchases.push({name,supplier,qty,unit,freight,total,eff,fund:$('bFund').value,date:new Date().toISOString()});
+  save();
+};
+
+let nfDraft = [];
+function parseBR(v){
+  let s=String(v??'').trim();
+  if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.');
+  const n=Number(s); return Number.isFinite(n)?n:0;
+}
+function nfCategory(name){
+  const s=(name||'').toUpperCase();
+  if(s.includes('CAPA')) return 'Capinhas';
+  if(s.includes('PELIC')) return 'Películas';
+  if(s.includes('CABO') || s.includes('CB-')) return 'Cabos';
+  if(s.includes('FONE') || s.includes('AIRPOD')) return 'Fones';
+  if(s.includes('CARREG') || s.includes('FONTE') || s.includes('BTE-')) return 'Carregadores';
+  if(s.includes('PULSEIRA')) return 'Pulseiras';
+  if(s.includes('STARLINK')) return 'Starlink';
+  return 'Outros';
+}
+function nfCleanName(desc){
+  return (desc||'').replace(/\s+/g,' ').trim().replace(/\bIPHONE\b/gi,'iPhone').replace(/\bAIRPODS\b/gi,'AirPods').replace(/\bPELICULA\b/gi,'Película');
+}
+function renderNFDraft(){
+  const baseTotal=nfDraft.reduce((s,x)=>s+(+x.qty||0)*(+x.unit||0),0);
+  const extra=+$('nfExtraFreight').value||0;
+
+  $('nfItemCount').textContent=nfDraft.length;
+  $('nfUnitCount').textContent=nfDraft.reduce((s,x)=>s+(+x.qty||0),0);
+  $('nfGrandTotal').textContent=money(baseTotal);
+  $('nfWithFreight').textContent=money(baseTotal+extra);
+
+  $('nfRows').innerHTML=nfDraft.length ? nfDraft.map((x,i)=>{
+    const qty=+x.qty||0;
+    const unit=+x.unit||0;
+    const lineBase=qty*unit;
+    const lineFreight=(extra>0 && baseTotal>0) ? extra*(lineBase/baseTotal) : 0;
+    const freightUnit=qty>0 ? lineFreight/qty : 0;
+    const effectiveUnit=unit+freightUnit;
+    const total=lineBase+lineFreight;
+
+    return `<tr>
+      <td>${x.code||''}</td>
+      <td style="min-width:220px">${x.original||''}</td>
+      <td><input data-nf="${i}" data-field="storeName" value="${(x.storeName||'').replace(/"/g,'&quot;')}" style="min-width:220px"></td>
+      <td>
+        <select data-nf="${i}" data-field="category">
+          ${['Acessórios','Capinhas','Películas','Cabos','Fones','Carregadores','Pulseiras','Starlink','iPhone','Outros'].map(c=>`<option ${x.category===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </td>
+      <td><input data-nf="${i}" data-field="qty" type="number" min="0" step="1" value="${qty}" style="width:80px"></td>
+      <td><input data-nf="${i}" data-field="unit" type="number" min="0" step="0.01" value="${unit}" style="width:110px"></td>
+      <td>${money(lineFreight)}<div class="meta">${money(freightUnit)}/un</div></td>
+      <td><b>${money(effectiveUnit)}</b></td>
+      <td>${money(total)}</td>
+      <td><button class="btn" onclick="removeNFRow(${i})">Excluir</button></td>
+    </tr>`;
+  }).join('') :
+  `<tr><td colspan="10"><div class="empty">Nenhum produto identificado.</div></td></tr>`;
+
+  document.querySelectorAll('[data-nf]').forEach(el=>el.oninput=()=>{
+    const i=+el.dataset.nf, f=el.dataset.field;
+    nfDraft[i][f]=(f==='qty'||f==='unit') ? +el.value : el.value;
+    renderNFDraft();
+  });
+}
+window.removeNFRow=i=>{nfDraft.splice(i,1);renderNFDraft();};
+$('nfExtraFreight').oninput=renderNFDraft;
+$('clearNFDraft').onclick=()=>{nfDraft=[];$('nfSupplier').value='';$('nfNumber').value='';$('nfDate').value='';$('nfExtraFreight').value='0';$('nfStatus').textContent='Conferência limpa. Nenhuma entrada foi lançada.';renderNFDraft();};
+
+async function readPdfStructured(file){
+  const pdfjs=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs');
+  pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs';
+  const pdf=await pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+  const allLines=[];
+  let rawText='';
+
+  for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const content=await page.getTextContent();
+    const items=content.items
+      .filter(x=>String(x.str||'').trim())
+      .map(x=>({
+        str:String(x.str||'').trim(),
+        x:Number(x.transform?.[4]||0),
+        y:Number(x.transform?.[5]||0),
+        w:Number(x.width||0)
+      }))
+      .sort((a,b)=> b.y-a.y || a.x-b.x);
+
+    // Agrupa os pedaços de texto pela posição vertical.
+    // Isso preserva cada linha visual da DANFE, inclusive a linha dos produtos.
+    const groups=[];
+    const yTolerance=2.6;
+    for(const it of items){
+      let g=groups.find(r=>Math.abs(r.y-it.y)<=yTolerance);
+      if(!g){g={y:it.y,items:[]};groups.push(g);}
+      g.items.push(it);
+    }
+
+    groups.sort((a,b)=>b.y-a.y);
+    for(const g of groups){
+      g.items.sort((a,b)=>a.x-b.x);
+      const line=g.items.map(x=>x.str).join(' ').replace(/\s+/g,' ').trim();
+      if(line){
+        allLines.push(line);
+        rawText+=line+'\n';
+      }
+    }
+  }
+  return {lines:allLines,text:rawText};
+}
+
+function parseDANFE(data){
+  const lines=(data?.lines||[]).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean);
+  const txt=data?.text||lines.join('\n');
+
+  // Fornecedor
+  const supplierCandidates=lines.filter(x=>
+    /COMERCIO|COMÉRCIO|VARIEDADES|ATACADISTA|LTDA|LTDA-ME/i.test(x) &&
+    !/ITRONIC RIO VERDE/i.test(x) &&
+    !/^RECEBEMOS DE ITRONIC/i.test(x) &&
+    x.length<150
+  );
+  let supplier=supplierCandidates.find(x=>/LUCIY|QI COMERCIO|QI COMÉRCIO/i.test(x)) || supplierCandidates[0];
+  if(supplier){
+    supplier=supplier.replace(/^RECEBEMOS DE\s*/i,'').replace(/\s+OS PRODUTOS.*$/i,'').trim();
+    $('nfSupplier').value=supplier;
+  }
+
+  // Número da nota
+  let nf='';
+  const nfLine=lines.find(x=>/(?:N[º°.]?|NF-e).*0{2,}\d/i.test(x));
+  if(nfLine){
+    const m=nfLine.match(/(?:N[º°.]?|NF-e)\s*[:.]?\s*0*([0-9]{3,}(?:\.[0-9]{3})*)/i);
+    if(m) nf=m[1].replace(/\./g,'');
+  }
+  if(!nf){
+    const m=txt.match(/N[º°.]?\s*[:.]?\s*0*([0-9]{3,}(?:\.[0-9]{3})*)/i);
+    if(m) nf=m[1].replace(/\./g,'');
+  }
+  if(nf) $('nfNumber').value=nf;
+
+  // Data de emissão
+  let dateMatch=txt.match(/(?:DATA DA EMISS[ÃA]O|EMISS[ÃA]O:?)\s*([0-3]\d\/[01]\d\/20\d{2})/i);
+  if(!dateMatch) dateMatch=txt.match(/\b([0-3]\d\/[01]\d\/20\d{2})\b/);
+  if(dateMatch){
+    const [d,m,y]=dateMatch[1].split('/');
+    $('nfDate').value=`${y}-${m}-${d}`;
+  }
+
+  // Linha de produto em DANFE:
+  // código + descrição + NCM(8 dígitos) + CSOSN + CFOP + unidade + quantidade + valor unitário
+  const productRegex=/^(\d+)\s+(.+?)\s+(\d{8})\s+(?:\d{4}|0\/\d{3})\s+(?:5102|6102)\s+(?:UNID|UND|UN)\s+([\d.,]+)\s+([\d.,]+)/i;
+  const items=[];
+  for(const line of lines){
+    const m=line.match(productRegex);
+    if(!m) continue;
+    const qty=parseBR(m[4]);
+    const unit=parseBR(m[5]);
+    if(qty<=0 || unit<0) continue;
+    const original=m[2].trim();
+    items.push({
+      code:m[1],
+      original,
+      storeName:nfCleanName(original),
+      category:nfCategory(original),
+      qty,
+      unit
+    });
+  }
+
+  nfDraft=items;
+  renderNFDraft();
+  return items.length;
+}
+
+$('readNF').onclick=async()=>{
+  const file=$('nfFile').files[0];
+  if(!file) return alert('Escolha o PDF da nota fiscal.');
+
+  const st=$('nfStatus');
+  st.className='hint';
+  st.textContent='Lendo a nota e reconstruindo a tabela de produtos...';
+
+  try{
+    const data=await readPdfStructured(file);
+    const n=parseDANFE(data);
+
+    if(n){
+      const units=nfDraft.reduce((s,x)=>s+(+x.qty||0),0);
+      st.textContent=`Leitura concluída: ${n} produtos / ${units} unidades encontradas. Confira os nomes e custos antes de confirmar.`;
+    }else{
+      st.classList.add('warning');
+      st.textContent='A nota foi lida, mas este layout ainda não foi reconhecido. Nada foi lançado no estoque.';
+    }
+  }catch(e){
+    console.error(e);
+    st.classList.add('dangerbox');
+    st.textContent='Não consegui ler este PDF automaticamente. Nada foi lançado no estoque.';
+  }
+};
+$('confirmNF').onclick=()=>{
+  if(!nfDraft.length) return alert('Nenhum item para confirmar.');
+  const supplier=$('nfSupplier').value.trim()||'Sem fornecedor', number=$('nfNumber').value.trim()||'Sem número', date=$('nfDate').value||new Date().toISOString().slice(0,10);
+  const extra=+$('nfExtraFreight').value||0, fund=$('nfFund').value;
+  const baseTotal=nfDraft.reduce((s,x)=>s+(+x.qty||0)*(+x.unit||0),0);
+  const invoice={supplier,number,date,extraFreight:extra,total:baseTotal+extra,itemCount:nfDraft.length,items:nfDraft.map(x=>({...x}))};
+  state.invoices.push(invoice);
+  nfDraft.forEach(x=>{
+    const lineBase=(+x.qty||0)*(+x.unit||0);
+    const lineFreight=(extra>0 && baseTotal>0) ? extra*(lineBase/baseTotal) : 0;
+    const total=lineBase+lineFreight, eff=(+x.qty||0)>0?total/(+x.qty||0):(+x.unit||0);
+    state.purchases.push({name:x.storeName||x.original,originalName:x.original,category:x.category,supplier,qty:+x.qty||0,unit:+x.unit||0,freight:lineFreight,total,eff,fund,invoiceNumber:number,date:new Date(date+'T12:00:00').toISOString()});
+    state.pricingQueue.push({_qid:makeQueueId(),name:x.storeName||x.original,category:x.category,qty:+x.qty||0,unitCost:+x.unit||0,freightUnit:(+x.qty||0)>0?lineFreight/(+x.qty||0):0,cost:eff,status:'Aguardando preço',invoiceNumber:number});
+  });
+  if(state.checklist?.length) state.checklist[0].done=true;
+  save();
+  nfDraft=[];$('nfSupplier').value='';$('nfNumber').value='';$('nfDate').value='';$('nfExtraFreight').value='0';renderNFDraft();
+  alert('Nota confirmada. Produtos lançados em Compras/Estoque e enviados para Precificação.');
+};
+window.priceQueueItem=i=>{
+  const x=state.pricingQueue[i];
+  if(!x) return;
+  if(!x._qid) x._qid=makeQueueId();
+  currentPricingQueueId=x._qid;
+
+  const norm=s=>String(s||'').trim().toLowerCase();
+  let purchase=null;
+
+  if(x.invoiceNumber){
+    purchase=state.purchases.find(p=>
+      String(p.invoiceNumber||'')===String(x.invoiceNumber||'') &&
+      norm(p.name)===norm(x.name)
+    );
+  }
+  if(!purchase){
+    purchase=state.purchases.find(p=>norm(p.name)===norm(x.name));
+  }
+
+  let unitCost=Number(x.unitCost);
+  let freightUnit=Number(x.freightUnit);
+
+  if(purchase){
+    unitCost=Number(purchase.unit)||0;
+    const qty=Number(purchase.qty)||0;
+    freightUnit=qty>0?(Number(purchase.freight)||0)/qty:0;
+  }else{
+    if(!Number.isFinite(unitCost)) unitCost=Number(x.cost)||0;
+    if(!Number.isFinite(freightUnit)) freightUnit=Math.max(0,(Number(x.cost)||0)-unitCost);
+  }
+
+  const existing=state.products.find(p=>norm(p.name)===norm(x.name));
+
+  $('pName').value=x.name||'';
+  $('pCost').value=unitCost.toFixed(2);
+  $('pFreight').value=freightUnit.toFixed(2);
+  $('pPrice').value=existing ? Number(existing.price||0).toFixed(2) : (Number(x.price)||0).toFixed(2);
+
+  const category=x.category||'Acessórios';
+  if(!Array.from($('pCategory').options).some(o=>o.value===category)){
+    $('pCategory').add(new Option(category,category));
+  }
+  $('pCategory').value=category;
+
+  $('pFreightSource').textContent=purchase
+    ? `Frete rateado da NF ${purchase.invoiceNumber||''}: ${money(freightUnit)} por unidade.`
+    : 'Frete recuperado da fila de precificação.';
+
+  x.unitCost=unitCost;
+  x.freightUnit=freightUnit;
+  x.cost=unitCost+freightUnit;
+
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.view==='pricing'));
+  document.querySelectorAll('.section').forEach(sec=>sec.classList.toggle('active',sec.id==='pricing'));
+  $('pageTitle').textContent='Precificação';
+  $('pageSub').textContent='Preço certo antes de vender.';
+  calcProduct();
+  save();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+
+$('copyPricingQueue').onclick=async()=>{
+  if(!state.pricingQueue.length) return alert('A fila de precificação está vazia.');
+  const linhas = [
+    'PRODUTO | CATEGORIA | QTD | CUSTO EFETIVO',
+    ...state.pricingQueue.map(x =>
+      `${x.name} | ${x.category||''} | ${x.qty||0} | ${money(x.cost)}`
+    )
+  ];
+  const texto = linhas.join('\n');
+  try{
+    await navigator.clipboard.writeText(texto);
+    alert('Lista copiada. Agora é só colar na conversa comigo.');
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=texto;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+    alert('Lista copiada. Agora é só colar na conversa comigo.');
+  }
+};
+
+$('exportPricingQueue').onclick=()=>{
+  if(!state.pricingQueue.length) return alert('A fila de precificação está vazia.');
+  const esc=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  const linhas=[
+    ['Produto','Categoria','Quantidade','Custo efetivo'],
+    ...state.pricingQueue.map(x=>[x.name,x.category||'',x.qty||0,(Number(x.cost)||0).toFixed(2).replace('.',',')])
+  ];
+  const csv='\ufeff'+linhas.map(r=>r.map(esc).join(';')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='fila_precificacao_itronic.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+$('calcService').onclick=()=>{
+  const part=+$('sPart').value,labor=+$('sLabor').value,freight=+$('sFreight').value,price=+$('sPrice').value,w=+$('sWarranty').value/100;
+  const cost=part+labor+freight+(price*w), profit=price-cost, margin=price?profit/price*100:0, markup=cost?((price/cost)-1)*100:0;
+  $('sCostOut').textContent=money(cost); $('sProfitOut').textContent=money(profit); $('sMarginOut').textContent=pct(margin); $('sMarkupOut').textContent=pct(markup);
+};
+$('saveClose').onclick=()=>{
+  state.close={prodRev:+$('cProdRev').value,servRev:+$('cServRev').value,prodCost:+$('cProdCost').value,servCost:+$('cServCost').value,fixed:+$('cFixed').value,prolabore:+$('cProlabore').value,financial:+$('cFinancial').value,other:+$('cOther').value}; save();
+};
+$('addDebt').onclick=()=>{
+  const name=$('dName').value.trim(); if(!name)return;
+  state.debts.push({name,balance:+$('dBalance').value,payment:+$('dPayment').value,rate:+$('dRate').value}); save();
+};
+$('exportBtn').onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='itronic-finance-backup.json'; a.click(); URL.revokeObjectURL(a.href);
+};
+$('importFile').onchange=e=>{
+  const f=e.target.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=()=>{try{Object.assign(state,JSON.parse(rd.result));save()}catch{alert('Arquivo inválido')}}; rd.readAsText(f);
+};
+$('resetBtn').onclick=()=>{if(confirm('Limpar todos os dados de teste deste navegador?')){localStorage.removeItem('itronicFinanceV1');location.reload();}};
+if($('dashExportBtn')) $('dashExportBtn').onclick=()=>$('exportBtn').click();
+if($('dashImportFile')) $('dashImportFile').onchange=e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{try{Object.assign(state,JSON.parse(rd.result));save()}catch{alert('Arquivo inválido')}};
+  rd.readAsText(f);
+};
+if($('dashResetBtn')) $('dashResetBtn').onclick=()=>$('resetBtn').click();
+
+
+
+let editContext = null;
+
+function openEditModal(){
+  $('editModal').classList.add('open');
+}
+function closeEditModal(){
+  $('editModal').classList.remove('open');
+  editContext=null;
+}
+$('closeEditModal').onclick=closeEditModal;
+$('cancelEditModal').onclick=closeEditModal;
+$('editModal').onclick=e=>{ if(e.target===$('editModal')) closeEditModal(); };
+
+window.editQueueItem=i=>{
+  const x=state.pricingQueue[i];
+  if(!x) return;
+  editContext={type:'queue',index:i,oldName:x.name,invoiceNumber:x.invoiceNumber||''};
+  $('editModalTitle').textContent='Editar item da fila';
+  $('editModalSub').textContent='Corrija nome, categoria, quantidade ou custo.';
+  $('editName').value=x.name||'';
+  $('editCategory').value=x.category||'Outros';
+  $('editQty').value=x.qty||0;
+  $('editCost').value=Number(x.cost||0).toFixed(2);
+  $('editPriceWrap').style.display='none';
+  openEditModal();
+};
+
+window.editPricedProduct=i=>{
+  const x=state.products[i];
+  if(!x) return;
+  editContext={type:'product',index:i,oldName:x.name};
+  $('editModalTitle').textContent='Editar produto precificado';
+  $('editModalSub').textContent='Altere custo, preço ou descrição. Markup e margem serão recalculados.';
+  $('editName').value=x.name||'';
+  $('editCategory').value=x.category||'Outros';
+  $('editQty').value=1;
+  $('editCost').value=Number(x.cost||0).toFixed(2);
+  $('editPrice').value=Number(x.price||0).toFixed(2);
+  $('editPriceWrap').style.display='block';
+  openEditModal();
+};
+
+$('saveEditModal').onclick=()=>{
+  if(!editContext) return;
+  const name=$('editName').value.trim();
+  const category=$('editCategory').value;
+  const qty=Math.max(0,+$('editQty').value||0);
+  const cost=Math.max(0,+$('editCost').value||0);
+  if(!name) return alert('Informe o nome do produto.');
+
+  if(editContext.type==='queue'){
+    const x=state.pricingQueue[editContext.index];
+    if(!x) return closeEditModal();
+
+    const oldName=editContext.oldName;
+    const invoiceNumber=editContext.invoiceNumber;
+    x.name=name;
+    x.category=category;
+    x.qty=qty;
+    x.cost=cost;
+
+    // Mantém compra/estoque sincronizados quando o item veio de uma NF.
+    state.purchases.forEach(p=>{
+      const sameInvoice = invoiceNumber && String(p.invoiceNumber||'')===String(invoiceNumber);
+      const sameName = String(p.name||'').toLowerCase()===String(oldName||'').toLowerCase();
+      if((sameInvoice && sameName) || (!invoiceNumber && sameName)){
+        p.name=name;
+        p.category=category;
+        p.qty=qty;
+        p.eff=cost;
+        p.total=cost*qty;
+        const freightTotal=Number(p.freight||0);
+        p.unit=Math.max(0,cost-(qty>0?freightTotal/qty:0));
+      }
+    });
+
+    // Também corrige o item guardado no histórico da NF, quando possível.
+    state.invoices.forEach(inv=>{
+      if(invoiceNumber && String(inv.number||'')!==String(invoiceNumber)) return;
+      (inv.items||[]).forEach(it=>{
+        const candidate=(it.storeName||it.name||it.original||'').toLowerCase();
+        if(candidate===String(oldName||'').toLowerCase()){
+          it.storeName=name;
+          it.name=name;
+          it.category=category;
+          it.qty=qty;
+          // custo editado aqui é custo efetivo; não sobrescrevemos silenciosamente o valor fiscal original.
+        }
+      });
+    });
+  } else if(editContext.type==='product'){
+    const x=state.products[editContext.index];
+    if(!x) return closeEditModal();
+    const price=Math.max(0,+$('editPrice').value||0);
+    const variableRate=((state.rates.card||0)+(state.rates.commission||0)+(state.rates.tax||0))/100;
+    const contribution=price-cost-(price*variableRate);
+    x.name=name;
+    x.category=category;
+    x.cost=cost;
+    x.price=price;
+    x.markup=cost>0?((price/cost)-1)*100:0;
+    x.margin=price>0?(contribution/price)*100:0;
+  }
+
+  save();
+  closeEditModal();
+};
+
+
+function purchasesForInvoice(inv){
+  return state.purchases.filter(p=>
+    String(p.invoiceNumber||'')===String(inv.number||'') &&
+    (!inv.supplier || !p.supplier || String(p.supplier)===String(inv.supplier))
+  );
+}
+function getInvoiceFreight(inv){
+  const ps=purchasesForInvoice(inv);
+  const fromLines=ps.reduce((s,p)=>s+(Number(p.freight)||0),0);
+  if(fromLines>0.0001) return fromLines;
+  return Number(inv.extraFreight)||0;
+}
+function getInvoiceBase(inv){
+  const ps=purchasesForInvoice(inv);
+  const fromLines=ps.reduce((s,p)=>s+(Number(p.unit)||0)*(Number(p.qty)||0),0);
+  if(fromLines>0.0001) return fromLines;
+  const freight=getInvoiceFreight(inv);
+  const total=Number(inv.total)||0;
+  return Math.max(0,total-freight);
+}
+
+window.editInvoiceFreight=i=>{
+  const inv=state.invoices[i];
+  if(!inv) return;
+
+  const current=getInvoiceFreight(inv);
+  const raw=prompt(
+    `Frete total da NF ${inv.number||''}\n\nInforme o valor total pago de frete para esta nota:`,
+    Number(current).toFixed(2)
+  );
+  if(raw===null) return;
+
+  const freight=Number(String(raw).replace(/\./g,'').replace(',','.'));
+  if(!Number.isFinite(freight) || freight<0) return alert('Informe um valor de frete válido.');
+
+  const ps=purchasesForInvoice(inv);
+  const baseTotal=ps.reduce((s,p)=>s+(Number(p.unit)||0)*(Number(p.qty)||0),0);
+
+  if(!ps.length || baseTotal<=0){
+    inv.extraFreight=freight;
+    inv.total=(Number(inv.total)||0)+freight-current;
+    save();
+    return alert('Frete salvo na nota. Não encontrei linhas antigas de compra suficientes para recalcular o rateio.');
+  }
+
+  // Rateia automaticamente de forma proporcional ao valor comprado de cada linha.
+  ps.forEach(p=>{
+    const lineBase=(Number(p.unit)||0)*(Number(p.qty)||0);
+    const lineFreight=freight*(lineBase/baseTotal);
+    p.freight=lineFreight;
+    p.total=lineBase+lineFreight;
+    p.eff=(Number(p.qty)||0)>0 ? p.total/Number(p.qty) : Number(p.unit)||0;
+
+    // Atualiza a fila de precificação correspondente, se o produto ainda estiver nela.
+    state.pricingQueue.forEach(q=>{ if(!q._qid) q._qid=makeQueueId();
+      const sameNF=String(q.invoiceNumber||'')===String(inv.number||'');
+      const sameName=String(q.name||'').toLowerCase()===String(p.name||'').toLowerCase();
+      if(sameNF && sameName){
+        q.unitCost=Number(p.unit)||0;
+        q.freightUnit=(Number(p.qty)||0)>0?(Number(p.freight)||0)/Number(p.qty):0;
+        q.cost=p.eff;
+        q.qty=p.qty;
+      }
+    });
+  });
+
+  inv.extraFreight=freight;
+  inv.freightMode='value';
+  inv.baseTotal=baseTotal;
+  inv.total=baseTotal+freight;
+
+  save();
+  alert(`Frete atualizado. ${money(freight)} foi rateado automaticamente entre os produtos da NF ${inv.number||''}.`);
+};
+
+
+$('applyBatchFreight').onclick=()=>{
+  const freightTotal=Math.max(0,+$('batchFreight').value||0);
+  const invoiceNumbers=new Set((state.invoices||[]).map(inv=>String(inv.number||'')));
+  const lines=(state.purchases||[]).filter(p=>invoiceNumbers.has(String(p.invoiceNumber||'')));
+
+  if(!lines.length) return alert('Não encontrei compras ligadas às notas importadas.');
+  const baseTotal=lines.reduce((s,p)=>s+(Number(p.unit)||0)*(Number(p.qty)||0),0);
+  if(baseTotal<=0) return alert('Não foi possível calcular o valor base das mercadorias.');
+
+  // Zera todos os fretes anteriores e aplica UM ÚNICO frete geral.
+  lines.forEach(p=>{
+    const qty=Number(p.qty)||0;
+    const lineBase=(Number(p.unit)||0)*qty;
+    const lineFreight=freightTotal*(lineBase/baseTotal);
+    p.freight=lineFreight;
+    p.total=lineBase+lineFreight;
+    p.eff=qty>0 ? p.total/qty : (Number(p.unit)||0);
+  });
+
+  // Distribui o mesmo frete geral entre as notas apenas para fins de histórico,
+  // sem criar frete duplicado.
+  (state.invoices||[]).forEach(inv=>{
+    const ps=lines.filter(p=>String(p.invoiceNumber||'')===String(inv.number||''));
+    const invBase=ps.reduce((s,p)=>s+(Number(p.unit)||0)*(Number(p.qty)||0),0);
+    const invFreight=freightTotal*(invBase/baseTotal);
+    inv.extraFreight=invFreight;
+    inv.baseTotal=invBase;
+    inv.total=invBase+invFreight;
+    inv.freightMode='batch-value';
+  });
+
+  // Atualiza custos na fila de precificação.
+  (state.pricingQueue||[]).forEach(q=>{
+    const candidates=lines.filter(p=>String(p.name||'').toLowerCase()===String(q.name||'').toLowerCase());
+    if(candidates.length===1){
+      q.unitCost=Number(candidates[0].unit)||0;
+      q.freightUnit=(Number(candidates[0].qty)||0)>0?(Number(candidates[0].freight)||0)/Number(candidates[0].qty):0;
+      q.cost=candidates[0].eff;
+      q.qty=candidates[0].qty;
+      q.invoiceNumber=candidates[0].invoiceNumber||q.invoiceNumber;
+    } else if(candidates.length>1 && q.invoiceNumber){
+      const p=candidates.find(p=>String(p.invoiceNumber||'')===String(q.invoiceNumber||''));
+      if(p){
+        q.unitCost=Number(p.unit)||0;
+        q.freightUnit=(Number(p.qty)||0)>0?(Number(p.freight)||0)/Number(p.qty):0;
+        q.cost=p.eff;
+        q.qty=p.qty;
+      }
+    }
+  });
+
+  save();
+  alert(`Frete geral de ${money(freightTotal)} aplicado uma única vez entre todas as notas.`);
+};
+
+function render(){
+  state.rates=state.rates||{card:5.37,commission:2,tax:8,pixDiscount:5};
+  $('rateCard').value=state.rates.card;
+  $('rateCommission').value=state.rates.commission;
+  $('rateTax').value=state.rates.tax;
+  $('ratePixDiscount').value=state.rates.pixDiscount;
+  if(document.activeElement!==$('pCard')) $('pCard').value=state.rates.card;
+  if(document.activeElement!==$('pCommission')) $('pCommission').value=state.rates.commission;
+  if(document.activeElement!==$('pTax')) $('pTax').value=state.rates.tax;
+  const c=state.close;
+  const rev=c.prodRev+c.servRev, cmv=c.prodCost+c.servCost, contribution=rev-cmv, result=contribution-c.fixed-c.prolabore-c.financial-c.other;
+  $('kRevenue').textContent=money(rev); $('kContribution').textContent=money(contribution); $('kResult').textContent=money(result);
+
+  // --- Indicadores executivos de precificação ---
+  const normDash=s=>String(s||'').trim().toLowerCase();
+
+  // Evita distorção de médias por duplicidades antigas: considera o último SKU salvo por nome.
+  const uniqueMap=new Map();
+  state.products.forEach(p=>uniqueMap.set(normDash(p.name),p));
+  const uniqueProducts=[...uniqueMap.values()];
+  const productHealth=uniqueProducts.map(p=>({p,h:pricingHealth(p)}));
+
+  const avgMargin=productHealth.length
+    ? productHealth.reduce((s,x)=>s+x.h.margin,0)/productHealth.length : 0;
+  const avgProfit=productHealth.length
+    ? productHealth.reduce((s,x)=>s+x.h.contribution,0)/productHealth.length : 0;
+  const avgMarkup=uniqueProducts.length
+    ? uniqueProducts.reduce((s,p)=>s+(Number(p.markup)||0),0)/uniqueProducts.length : 0;
+
+  const pricedByName=new Map(uniqueProducts.map(p=>[normDash(p.name),p]));
+  let potentialRevenue=0, potentialContribution=0, pricedPurchaseCapital=0;
+  state.purchases.forEach(line=>{
+    const p=pricedByName.get(normDash(line.name));
+    if(!p) return;
+    const qty=Number(line.qty)||0;
+    const h=pricingHealth(p);
+    potentialRevenue += qty*(Number(p.price)||0);
+    potentialContribution += qty*h.contribution;
+    pricedPurchaseCapital += Number(line.total)||0;
+  });
+  const weightedMargin=potentialRevenue>0 ? (potentialContribution/potentialRevenue)*100 : 0;
+
+  $('kAvgMargin').textContent=pct(avgMargin);
+  $('kWeightedMargin').textContent=pct(weightedMargin);
+  $('kAvgProfit').textContent=money(avgProfit);
+  $('kAvgMarkup').textContent=pct(avgMarkup);
+  $('kStockCapital').textContent=money(state.purchases.reduce((s,x)=>s+(Number(x.total)||0),0));
+  $('kPotentialRevenue').textContent=money(potentialRevenue);
+  $('kPotentialContribution').textContent=money(potentialContribution);
+  $('kPricedCount').textContent=uniqueProducts.length;
+  $('kQueueCount').textContent=state.pricingQueue.length;
+
+  const goodCount=productHealth.filter(x=>x.h.status==='good').length;
+  const warnCount=productHealth.filter(x=>x.h.status==='warn').length;
+  const riskCount=productHealth.filter(x=>x.h.status==='risk').length;
+  $('dashHealthGood').textContent=goodCount+' SKUs';
+  $('dashHealthWarn').textContent=warnCount+' SKUs';
+  $('dashHealthRisk').textContent=riskCount+' SKUs';
+
+  $('dashInvoiceCount').textContent=state.invoices.length;
+  $('dashPurchaseLines').textContent=state.purchases.length;
+  $('dashUniquePriced').textContent=uniqueProducts.length;
+  $('dashQueue').textContent=state.pricingQueue.length;
+
+  const avgMarginEl=$('kAvgMargin');
+  avgMarginEl.className = avgMargin >= (state.health?.greenMin ?? 45) ? 'metric-good'
+    : avgMargin < (state.health?.redBelow ?? 25) ? 'metric-risk' : 'metric-warn';
+
+  const pricingHint=$('pricingExecutiveHint');
+  pricingHint.className='hint';
+  if(!uniqueProducts.length){
+    pricingHint.textContent='Precifique os produtos para gerar a leitura executiva.';
+  }else if(riskCount>0){
+    pricingHint.classList.add('dangerbox');
+    pricingHint.textContent=`Atenção: ${riskCount} produto(s) em muito risco e ${warnCount} em alerta. Margem média atual: ${pct(avgMargin)}.`;
+  }else if(warnCount>0){
+    pricingHint.classList.add('warning');
+    pricingHint.textContent=`Base saudável, mas ${warnCount} produto(s) merecem revisão. Margem média atual: ${pct(avgMargin)}.`;
+  }else{
+    pricingHint.textContent=`Toda a base precificada está verde. Margem média dos SKUs: ${pct(avgMargin)} e margem ponderada das compras: ${pct(weightedMargin)}.`;
+  }
+  $('kResult').parentElement.className='card kpi '+(result<0?'bad':'ok');
+  $('dCMV').textContent=money(cmv); $('dFixed').textContent=money(c.fixed); $('dProlabore').textContent=money(c.prolabore);
+  const fundUsed=state.purchases.filter(x=>x.fund==='fundo').reduce((s,x)=>s+x.total,0), avail=Math.max(0,50000-fundUsed);
+  $('fundUsed').textContent=money(fundUsed); $('fundAvailable').textContent=money(avail); $('kProtected').textContent=money(avail);
+  $('fundBar').style.width=Math.min(100,fundUsed/50000*100)+'%';
+  const purchaseMerch=state.purchases.reduce((s,x)=>s+(Number(x.unit)||0)*(Number(x.qty)||0),0);
+  const purchaseFreight=state.purchases.reduce((s,x)=>s+(Number(x.freight)||0),0);
+  const purchaseGrand=state.purchases.reduce((s,x)=>s+(Number(x.total)||0),0);
+  $('purchaseMerchTotal').textContent=money(purchaseMerch);
+  $('purchaseFreightTotal').textContent=money(purchaseFreight);
+  $('purchaseTotal').textContent=money(purchaseGrand);
+  $('purchaseFundTotal').textContent=money(fundUsed);
+
+  $('productRows').innerHTML=state.products.length?state.products.map((x,i)=>{
+    const h=pricingHealth(x);
+    return `<tr>
+      <td>${x.name}<div class="meta">${x.category}</div></td>
+      <td>${money(x.cost)}</td>
+      <td>${money(x.price)}</td>
+      <td><b>${money(h.contribution)}</b><div class="meta">por unidade</div></td>
+      <td>${pct(x.markup)}</td>
+      <td>${pct(h.margin)}</td>
+      <td><div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><button class="btn" onclick="editPricedProduct(${i})">Editar</button><button class="btn" onclick="removeProduct(${i})">Excluir</button></div></td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="7"><div class="empty">Nenhum produto precificado ainda.</div></td></tr>`;
+  state.health=state.health||{greenMin:45,redBelow:25};
+  $('healthRedBelow').value=state.health.redBelow;
+  $('healthGreenMin').value=state.health.greenMin;
+
+  const healthItems=state.products.map((p,i)=>({p,i,h:pricingHealth(p)}));
+  const order={risk:0,warn:1,good:2};
+  healthItems.sort((a,b)=>order[a.h.status]-order[b.h.status] || a.h.margin-b.h.margin);
+
+  $('healthGoodCount').textContent=healthItems.filter(x=>x.h.status==='good').length;
+  $('healthWarnCount').textContent=healthItems.filter(x=>x.h.status==='warn').length;
+  $('healthRiskCount').textContent=healthItems.filter(x=>x.h.status==='risk').length;
+
+  $('pricingHealthRows').innerHTML=healthItems.length ? healthItems.map(({p,i,h})=>{
+    const bar=Math.max(0,Math.min(100,h.margin));
+    return `<tr class="health-row ${h.status}">
+      <td><span class="health-pill ${h.status}">${h.label}</span></td>
+      <td><b>${p.name}</b><div class="meta">${p.category||''}</div></td>
+      <td>${money(p.cost)}</td>
+      <td>${money(p.price)}</td>
+      <td>${pct(h.costRatio)}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:9px">
+          <div class="health-bar ${h.status}"><i style="width:${bar}%"></i></div>
+          <b>${pct(h.margin)}</b>
+        </div>
+      </td>
+      <td><b>${money(h.contribution)}</b></td>
+      <td style="min-width:260px">${h.reason}</td>
+      <td><button class="btn" onclick="editPricedProduct(${i})">Revisar</button></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="9"><div class="empty">Precifique os produtos para o sistema começar a analisar a saúde dos preços.</div></td></tr>`;
+
+  $('purchaseRows').innerHTML=state.purchases.length?state.purchases.slice().reverse().map(x=>{
+    const qty=Number(x.qty)||0, freight=Number(x.freight)||0;
+    const freightUnit=qty>0?freight/qty:0;
+    return `<tr>
+      <td>${x.name}<div class="meta">${x.supplier||'Sem fornecedor'}</div></td>
+      <td>${qty}</td>
+      <td>${money(x.unit)}</td>
+      <td>${money(freight)}<div class="meta">${money(freightUnit)}/un</div></td>
+      <td><b>${money(x.eff)}</b></td>
+      <td>${money(x.total)}</td>
+      <td>${x.invoiceNumber||'-'}</td>
+      <td>${x.fund==='fundo'?'Fundo 50 mil':'Caixa'}</td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="8"><div class="empty">Nenhuma compra registrada.</div></td></tr>`;
+
+  const grouped={}; state.purchases.forEach(x=>{grouped[x.name]=grouped[x.name]||{qty:0,total:0};grouped[x.name].qty+=x.qty;grouped[x.name].total+=x.total});
+  const inv=Object.entries(grouped);
+  $('inventoryRows').innerHTML=inv.length?inv.map(([name,v])=>`<tr><td>${name}</td><td>${v.qty}</td><td>${money(v.total/v.qty)}</td><td>${money(v.total)}</td><td><span class="pill">A classificar</span></td></tr>`).join(''):`<tr><td colspan="5"><div class="empty">O estoque será formado a partir das compras registradas.</div></td></tr>`;
+
+
+  state.pricingQueue.forEach(q=>{
+    const norm=s=>String(s||'').trim().toLowerCase();
+    let p=null;
+    if(q.invoiceNumber){
+      p=state.purchases.find(x=>String(x.invoiceNumber||'')===String(q.invoiceNumber||'')&&norm(x.name)===norm(q.name));
+    }
+    if(!p) p=state.purchases.find(x=>norm(x.name)===norm(q.name));
+    if(p){
+      q.unitCost=Number(p.unit)||0;
+      q.freightUnit=(Number(p.qty)||0)>0?(Number(p.freight)||0)/Number(p.qty):0;
+      q.cost=q.unitCost+q.freightUnit;
+    }
+  });
+
+    if($('pricingQueueCount')) $('pricingQueueCount').textContent=state.pricingQueue.length;
+  $('pricingQueueRows').innerHTML=state.pricingQueue.length?state.pricingQueue.map((x,i)=>`<tr><td>${x.name}</td><td>${x.category||''}</td><td>${x.qty||0}</td><td>${money(x.cost)}</td><td><div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><button class="btn" onclick="editQueueItem(${i})">Editar</button><button class="btn" onclick="priceQueueItem(${i})">Precificar</button></div></td></tr>`).join(''):`<tr><td colspan="5"><div class="empty">Nenhum produto aguardando precificação.</div></td></tr>`;
+  $('invoiceHistoryRows').innerHTML=state.invoices.length?state.invoices.map((x,i)=>({x,i})).reverse().map(({x,i})=>{
+    const freight=getInvoiceFreight(x), base=getInvoiceBase(x), total=base+freight;
+    return `<tr>
+      <td>${(x.date||'').split('-').reverse().join('/')}</td>
+      <td>${x.supplier||''}</td>
+      <td>${x.number||''}</td>
+      <td>${x.itemCount||x.items?.length||0}</td>
+      <td>${money(base)}</td>
+      <td><b>${money(freight)}</b></td>
+      <td>${money(total)}</td>
+      <td><button class="btn" onclick="editInvoiceFreight(${i})">Editar frete</button></td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="8"><div class="empty">Nenhuma nota importada ainda.</div></td></tr>`;
+
+  $('debtRows').innerHTML=state.debts.length?state.debts.map(x=>`<tr><td>${x.name}</td><td>${money(x.balance)}</td><td>${money(x.payment)}</td><td>${pct(x.rate)}</td></tr>`).join(''):`<tr><td colspan="4"><div class="empty">Cadastre as dívidas atuais para comparar o custo delas.</div></td></tr>`;
+  $('checklist').innerHTML=state.checklist.map((x,i)=>`<label class="row" style="cursor:pointer"><div><b>${x.t}</b></div><input type="checkbox" ${x.done?'checked':''} onchange="toggleCheck(${i})"></label>`).join('');
+
+  $('cProdRev').value=c.prodRev; $('cServRev').value=c.servRev; $('cProdCost').value=c.prodCost; $('cServCost').value=c.servCost; $('cFixed').value=c.fixed; $('cProlabore').value=c.prolabore; $('cFinancial').value=c.financial; $('cOther').value=c.other;
+  const health=$('healthHint'); health.className='hint';
+  if(rev===0) health.textContent='Comece registrando compras e preços. O painel vai ficando mais preciso conforme os dados reais entram.';
+  else if(result<0){health.classList.add('dangerbox');health.textContent=`O fechamento atual está negativo em ${money(Math.abs(result))}. Antes de pensar em expansão, precisamos corrigir margem, despesas e giro.`}
+  else health.textContent=`O fechamento atual está positivo em ${money(result)}. O próximo passo é confirmar se esse lucro virou caixa e reserva.`;
+}
+window.removeProduct=i=>{state.products.splice(i,1);save()}
+window.toggleCheck=i=>{state.checklist[i].done=!state.checklist[i].done;save()}
+render();
+const initialTop=document.querySelector('.top');
+if(initialTop) initialTop.style.display='none';
+</script>
+</body>
+</html>

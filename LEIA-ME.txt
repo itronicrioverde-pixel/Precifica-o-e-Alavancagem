@@ -1,0 +1,25 @@
+ITRONIC — PUBLICAÇÃO LIMPA NO GITHUB
+
+APAGUE os arquivos atuais do repositório, mas NÃO apague o repositório.
+
+Depois envie SOMENTE estes arquivos para a raiz:
+1. index.html
+2. manifest.webmanifest
+3. apple-touch-icon.png
+4. icon-192.png
+5. icon-512.png
+6. favicon.png
+7. .nojekyll
+
+NÃO crie pasta assets.
+
+Depois do upload:
+- espere o GitHub Pages concluir o deploy;
+- abra o endereço publicado;
+- no iPad/iPhone, apague qualquer atalho antigo da Tela de Início;
+- feche o Safari;
+- abra novamente o site;
+- Compartilhar > Adicionar à Tela de Início.
+
+IMPORTANTE:
+Os nomes e referências foram simplificados de propósito para o Safari/iOS encontrar o ícone sem ambiguidade.
