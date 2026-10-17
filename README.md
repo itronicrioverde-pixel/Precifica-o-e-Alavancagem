@@ -1,1 +1,0 @@
-# Precifica-o-e-Alavancagem
